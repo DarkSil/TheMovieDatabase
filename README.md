@@ -5,8 +5,8 @@ Movie Player App
 
 
 
-In order to complete this task and to understand the proper "required" tech stack I designed the simple <a href="https://www.figma.com/design/CjVBZff1syCrr95vpWsbaL/Media-Player-TA?node-id=0-1&t=s3Rq9gdTYHkWQiZP-1"><b>Figma file</b></a> 
-that contains all the screens and explains the navigation of an application.
+In order to complete this task and to understand the proper "required" tech stack I designed the 
+simple <a href="https://www.figma.com/design/CjVBZff1syCrr95vpWsbaL/Media-Player-TA?node-id=0-1&t=s3Rq9gdTYHkWQiZP-1"><b>Figma file</b></a> that contains all the screens and explains the navigation of an application.
 
 I'd like also to add here that the design is based on the TA description and my
 imagination of the task in general, so when I fetched the TMDB's api and realized they
@@ -26,6 +26,6 @@ Tech stack:
 7. Unit Tests - JUnit
 8. Overall Media Handling - Foreground Service
 9. Media Playback Handling - ExoPlayer
-10. Media Audio Control (Notification) - MediaSessionCompat 
+10. Media Control (Notification) - MediaSession 
 11. Image Loading - Coil
 </pre>
