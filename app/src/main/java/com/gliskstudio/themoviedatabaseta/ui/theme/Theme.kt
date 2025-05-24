@@ -1,13 +1,8 @@
 package com.gliskstudio.themoviedatabaseta.ui.theme
 
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
@@ -37,26 +32,20 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = InversePrimary,
     outline = Outline,
     outlineVariant = OutlineVariant,
-    scrim = Scrim
+    scrim = Scrim,
+    background = Surface,
+    onBackground = OnSurface
 )
 
 @Composable
 fun TheMovieDatabaseTATheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        // For this project I'd like to have an opportunity to have a custom theme, so I am not deleting this
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        else -> LightColorScheme
-    }
+    // So I wanted to try Dynamic Color Scheme but unfortunately on my devices there is no option
+    // to disable this feature so I decided to remove it and keep going with my custom one
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme,
         content = content
     )
 }
