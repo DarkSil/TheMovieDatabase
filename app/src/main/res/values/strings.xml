@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">The Movie Database (TA)</string>
+    <string name="app_logo">App logo image</string>
+    <string name="tech_assignment">2Coders\' Tech Assignment</string>
+    <string name="hide">Hide</string>
+    <string name="application_purpose">Application Purpose</string>
+    <string name="purpose_text">The purpose of this test task is to demonstrate my skills, experience, and approach to problem-solving. It showcases how I analyze requirements, structure my work, and deliver clean, maintainable code. Thank you for the opportunity to present my capabilities.</string>
 </resources>
