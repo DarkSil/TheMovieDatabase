@@ -1,5 +1,6 @@
 package com.gliskstudio.themoviedatabaseta.view.category.section
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,15 +19,21 @@ fun CategoryList(
     isLimited: Boolean,
     onItemClick: (id: Int) -> Unit
 ) {
-    LazyColumn (
-        modifier = if (isLimited) {
-            Modifier.fillMaxWidth()
-        } else {
-            Modifier.fillMaxSize()
+    if (isLimited) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            for (item in list) {
+                CategoryItem(item, onItemClick)
+            }
         }
-    ) {
-        items(list) {
-            CategoryItem(it, onItemClick)
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(list) {
+                CategoryItem(it, onItemClick)
+            }
         }
     }
 }
