@@ -29,7 +29,7 @@ fun MainScreen () {
             .fillMaxSize()
             .padding(16.dp, 0.dp)
     ) {
-        var isPurposeVisible by rememberSaveable { mutableStateOf(true) }
+        val isPurposeVisible = rememberSaveable { mutableStateOf(true) }
 
         AnimatedVisibility(
             visible = isPurposeVisible,
@@ -44,6 +44,11 @@ fun MainScreen () {
                 isPurposeVisible = false
             }
         }
+
+        PurposeSection(isPurposeVisible) {
+            isPurposeVisible.value = false
+        }
+
     }
 }
 
