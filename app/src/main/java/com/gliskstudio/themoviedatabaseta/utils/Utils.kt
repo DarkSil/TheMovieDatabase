@@ -15,12 +15,13 @@ object Utils {
         )
     }
 
-    fun mockMovieList() : ArrayList<MovieItem> {
-        return arrayListOf(
-            mockMovieItem(),
-            mockMovieItem(),
-            mockMovieItem()
-        )
+    fun mockMovieList(isLimited: Boolean = false) : ArrayList<MovieItem> {
+        val size = if (isLimited) 3 else 10
+        return arrayListOf<MovieItem>().apply {
+            for (i in 0..< size) {
+                add(mockMovieItem())
+            }
+        }
     }
 
 }

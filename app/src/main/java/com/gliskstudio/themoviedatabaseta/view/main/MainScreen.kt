@@ -14,7 +14,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.gliskstudio.themoviedatabaseta.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
 import com.gliskstudio.themoviedatabaseta.view.main.purposeSection.PurposeSection
 
@@ -23,7 +26,7 @@ object MainScreen {
 }
 
 @Composable
-fun MainScreen () {
+fun MainScreen (controller: NavHostController) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -39,7 +42,7 @@ fun MainScreen () {
         }
 
         val onCategoryClick: (categoryType: CategoryType) -> Unit = { categoryType ->
-            // TODO Navigate to category
+            controller.navigate(CategoryScreen.prepareRoute(categoryType.categoryId))
         }
 
         PurposeSection(isPurposeVisible) {
@@ -70,7 +73,8 @@ fun MainScreen () {
 @Composable
 @Preview (apiLevel = 34)
 private fun Preview () {
+    val controller = rememberNavController()
     Scaffold { padding ->
-        MainScreen()
+        MainScreen(controller)
     }
 }

@@ -42,19 +42,21 @@ fun CategoryTitle(
             text = stringResource(categoryType.categoryTitleId),
             fontSize = 24.sp
         )
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.ic_forward),
-                contentDescription = stringResource(R.string.icon_forward),
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(OnSurfaceVariant),
+        if (categoryType.isLimited) {
+            Box(
+                contentAlignment = Alignment.CenterStart,
                 modifier = Modifier
-                    .size(24.dp)
-            )
+                    .weight(1f)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_forward),
+                    contentDescription = stringResource(R.string.icon_forward),
+                    contentScale = ContentScale.Fit,
+                    colorFilter = ColorFilter.tint(OnSurfaceVariant),
+                    modifier = Modifier
+                        .size(24.dp)
+                )
+            }
         }
     }
 }

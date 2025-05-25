@@ -43,7 +43,7 @@ fun CategoryList(
 private fun Preview() {
     Scaffold { padding ->
         CategoryList(
-            Utils.mockMovieList(),
+            Utils.mockMovieList(true),
             true
         ) { }
     }
