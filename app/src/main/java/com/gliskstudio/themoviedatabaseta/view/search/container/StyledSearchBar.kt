@@ -1,0 +1,95 @@
+package com.gliskstudio.themoviedatabaseta.view.search.container
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.gliskstudio.themoviedatabaseta.ui.theme.SurfaceContainerHigh
+import com.gliskstudio.themoviedatabaseta.view.search.SearchScreen
+import com.gliskstudio.themoviedatabaseta.view.sharedInstances.BackButton
+
+@Composable
+fun StyledSearchBar(
+    isSearchBarVisible: Boolean,
+    controller: NavHostController
+) {
+    AnimatedVisibility(
+        visible = isSearchBarVisible,
+        enter = expandVertically(tween( 400)),
+        exit = shrinkVertically(tween( 400))
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(26.dp, 0.dp)
+                .background(SurfaceContainerHigh, RoundedCornerShape(28.dp))
+                .padding(16.dp, 4.dp)
+        ) {
+            val currentBackStack by controller.currentBackStackEntryAsState()
+            val isButtonVisible = rememberSaveable(currentBackStack) {
+                controller.previousBackStackEntry != null
+            }
+
+            // TODO Query should be used within shared ViewModel
+            val query = rememberSaveable { mutableStateOf("") }
+            val queryIsNotEmpty by remember {
+                derivedStateOf {
+                    query.value.isNotEmpty()
+                }
+            }
+
+            if (queryIsNotEmpty) {
+                if (controller.currentDestination?.route != SearchScreen.route) {
+                    controller.navigate(SearchScreen.route)
+                }
+            }
+
+            BackButton(
+                isButtonVisible
+            ) {
+                query.value = ""
+                controller.popBackStack()
+            }
+
+            SearchTextField(
+                query,
+                // #1 I used padding instead of arrangement to prevent jumping while back button appears
+                // I am not using start padding due to internal TextField's padding (20dp)
+                Modifier.weight(1f).padding(0.dp, 0.dp, 16.dp, 0.dp)
+            )
+
+            SearchButton(query) {
+                if (controller.currentDestination?.route != SearchScreen.route) {
+                    controller.navigate(SearchScreen.route)
+                }
+            }
+        }
+    }
+
+}
+
+@Preview(apiLevel = 34)
+@Composable
+private fun Preview() {
+    val controller = rememberNavController()
+    StyledSearchBar(true, controller)
+}

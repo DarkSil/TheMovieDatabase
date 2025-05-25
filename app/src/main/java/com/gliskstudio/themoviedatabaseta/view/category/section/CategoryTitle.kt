@@ -50,7 +50,7 @@ fun CategoryTitle(
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_forward),
-                    contentDescription = stringResource(R.string.icon_forward),
+                    contentDescription = stringResource(R.string.forward_button),
                     contentScale = ContentScale.Fit,
                     colorFilter = ColorFilter.tint(OnSurfaceVariant),
                     modifier = Modifier

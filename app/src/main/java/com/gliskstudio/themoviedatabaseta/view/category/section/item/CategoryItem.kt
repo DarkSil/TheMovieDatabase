@@ -31,8 +31,8 @@ import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurfaceVariant
 import com.gliskstudio.themoviedatabaseta.utils.Utils
-import com.gliskstudio.themoviedatabaseta.view.PlayPauseImage
-import com.gliskstudio.themoviedatabaseta.view.SaveImage
+import com.gliskstudio.themoviedatabaseta.view.sharedInstances.PlayPauseImage
+import com.gliskstudio.themoviedatabaseta.view.sharedInstances.SaveImage
 
 @Composable
 fun CategoryItem(

@@ -1,4 +1,4 @@
-package com.gliskstudio.themoviedatabaseta.view
+package com.gliskstudio.themoviedatabaseta.view.sharedInstances
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

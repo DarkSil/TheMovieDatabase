@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import com.gliskstudio.themoviedatabaseta.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
 import com.gliskstudio.themoviedatabaseta.view.main.MainScreen
-import com.gliskstudio.themoviedatabaseta.view.search.SearchContainer
+import com.gliskstudio.themoviedatabaseta.view.search.SearchScreen
 
 @Composable
 fun AppNavigation(controller: NavHostController) {
@@ -18,9 +18,7 @@ fun AppNavigation(controller: NavHostController) {
         startDestination = MainScreen.route
     ) {
         composable(MainScreen.route) {
-            SearchContainer {
-                MainScreen(controller)
-            }
+            MainScreen(controller)
         }
         composable(
             route = CategoryScreen.route,
@@ -33,9 +31,10 @@ fun AppNavigation(controller: NavHostController) {
             // It must always have a value but in case it won't it should just crash the app
             val id = it.arguments?.getInt(CategoryScreen.categoryArgument) ?: -1
             val category = CategoryType.fromCategoryId(id)
-            SearchContainer {
-                CategoryScreen(category, controller)
-            }
+            CategoryScreen(category, controller)
+        }
+        composable(SearchScreen.route) {
+            SearchScreen(controller)
         }
     }
 }

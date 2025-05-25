@@ -8,10 +8,13 @@
     <string name="featured_movies">Featured Movies</string>
     <string name="liked_movies">Liked Movies</string>
     <string name="downloaded_movies">Downloaded Movies</string>
-    <string name="icon_forward">Icon Forward</string>
+    <string name="forward_button">Forward button </string>
     <string name="movie_poster">Movie poster</string>
     <string name="save">Save</string>
     <string name="play_button">Play button</string>
     <string name="pause_button">Pause button</string>
     <string name="date_and_rating">%1$s • Rating %2$s</string>
+    <string name="back_button">Back button</string>
+    <string name="search_button">Search button</string>
+    <string name="clear_button">Clear button</string>
 </resources>
