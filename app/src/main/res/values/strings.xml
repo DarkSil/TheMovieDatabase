@@ -5,4 +5,13 @@
     <string name="hide">Hide</string>
     <string name="application_purpose">Application Purpose</string>
     <string name="purpose_text">The purpose of this test task is to demonstrate my skills, experience, and approach to problem-solving. It showcases how I analyze requirements, structure my work, and deliver clean, maintainable code. Thank you for the opportunity to present my capabilities.</string>
+    <string name="featured_movies">Featured Movies</string>
+    <string name="liked_movies">Liked Movies</string>
+    <string name="downloaded_movies">Downloaded Movies</string>
+    <string name="icon_forward">Icon Forward</string>
+    <string name="movie_poster">Movie poster</string>
+    <string name="save">Save</string>
+    <string name="play_button">Play button</string>
+    <string name="pause_button">Pause button</string>
+    <string name="date_and_rating">%1$s • Rating %2$s</string>
 </resources>

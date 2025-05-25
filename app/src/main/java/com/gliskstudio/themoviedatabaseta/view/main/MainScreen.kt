@@ -1,21 +1,17 @@
 package com.gliskstudio.themoviedatabaseta.view.main
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gliskstudio.themoviedatabaseta.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
 import com.gliskstudio.themoviedatabaseta.view.main.purposeSection.PurposeSection
 
 object MainScreen {
@@ -31,23 +27,33 @@ fun MainScreen () {
     ) {
         val isPurposeVisible = rememberSaveable { mutableStateOf(true) }
 
-        AnimatedVisibility(
-            visible = isPurposeVisible,
-            enter = expandVertically(
-                tween(500)
-            ),
-            exit = shrinkVertically(
-                tween(500)
-            )
-        ) {
-            PurposeSection {
-                isPurposeVisible = false
-            }
+        val onItemClick: (id: Int) -> Unit = { id ->
+            // TODO Navigate to item
+        }
+
+        val onCategoryClick: (categoryType: CategoryType) -> Unit = { categoryType ->
+            // TODO Navigate to category
         }
 
         PurposeSection(isPurposeVisible) {
             isPurposeVisible.value = false
         }
+
+        CategorySection(
+            CategoryType.Featured(true),
+            onCategoryClick,
+            onItemClick
+        )
+        CategorySection(
+            CategoryType.Liked(true),
+            onCategoryClick,
+            onItemClick
+        )
+        CategorySection(
+            CategoryType.Downloaded(true),
+            onCategoryClick,
+            onItemClick
+        )
 
     }
 }
