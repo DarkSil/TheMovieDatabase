@@ -23,6 +23,11 @@ sealed class CategoryType(
         R.string.downloaded_movies,
         2
     )
+    data class Searched(override val isLimited: Boolean = false) : CategoryType(
+        isLimited,
+        R.string.searched_movies,
+        3
+    )
 
     class UnknownCategoryTypeException(id: Int) : IllegalArgumentException("Unknown category id: $id")
 
@@ -32,6 +37,7 @@ sealed class CategoryType(
                 0 -> Featured(isLimited)
                 1 -> Liked(isLimited)
                 2 -> Downloaded(isLimited)
+                3 -> Searched(isLimited)
                 else -> throw UnknownCategoryTypeException(id)
             }
         }

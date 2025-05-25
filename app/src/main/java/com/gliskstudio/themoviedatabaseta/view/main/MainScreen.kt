@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gliskstudio.themoviedatabaseta.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.model.LoadStatus
+import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
 import com.gliskstudio.themoviedatabaseta.view.main.purposeSection.PurposeSection
@@ -35,7 +37,11 @@ fun MainScreen (controller: NavHostController) {
             .padding(16.dp, 0.dp)
             .verticalScroll(scrollState)
     ) {
+        // TODO Get from preferences
         val isPurposeVisible = rememberSaveable { mutableStateOf(true) }
+
+        // TODO Get from viewmodel
+        val status = LoadStatus.Loaded(Utils.mockMovieList(true))
 
         val onItemClick: (id: Int) -> Unit = { id ->
             // TODO Navigate to item
@@ -50,19 +56,22 @@ fun MainScreen (controller: NavHostController) {
         }
 
         CategorySection(
-            CategoryType.Featured(true),
-            onCategoryClick,
-            onItemClick
+            categoryType = CategoryType.Featured(true),
+            status,
+            onCategoryClick = onCategoryClick,
+            onItemClick = onItemClick
         )
         CategorySection(
-            CategoryType.Liked(true),
-            onCategoryClick,
-            onItemClick
+            categoryType = CategoryType.Liked(true),
+            status,
+            onCategoryClick = onCategoryClick,
+            onItemClick = onItemClick
         )
         CategorySection(
-            CategoryType.Downloaded(true),
-            onCategoryClick,
-            onItemClick
+            categoryType = CategoryType.Downloaded(true),
+            status,
+            onCategoryClick = onCategoryClick,
+            onItemClick = onItemClick
         )
 
         Spacer(Modifier.height(16.dp))

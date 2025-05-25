@@ -15,7 +15,7 @@ import com.gliskstudio.themoviedatabaseta.view.category.section.item.CategoryIte
 
 @Composable
 fun CategoryList(
-    list: ArrayList<MovieItem>,
+    list: List<MovieItem>,
     isLimited: Boolean,
     onItemClick: (id: Int) -> Unit
 ) {

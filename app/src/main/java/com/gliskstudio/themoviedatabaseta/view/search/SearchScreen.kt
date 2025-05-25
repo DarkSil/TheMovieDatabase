@@ -1,7 +1,18 @@
 package com.gliskstudio.themoviedatabaseta.view.search
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.gliskstudio.themoviedatabaseta.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.model.LoadStatus
+import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
 
 object SearchScreen {
     const val route = "search"
@@ -9,5 +20,28 @@ object SearchScreen {
 
 @Composable
 fun SearchScreen(controller: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp, 0.dp)
+    ) {
+        // TODO Get from ViewModel
+        val loadStatus: LoadStatus = LoadStatus.Error(302)
 
+        CategorySection(
+            categoryType = CategoryType.Searched(),
+            status = loadStatus,
+            onCategoryClick = {},
+            onItemClick = {}
+        )
+    }
+}
+
+@Preview(apiLevel = 34)
+@Composable
+private fun Preview() {
+    Scaffold { padding ->
+        val controller = rememberNavController()
+        SearchScreen(controller)
+    }
 }
