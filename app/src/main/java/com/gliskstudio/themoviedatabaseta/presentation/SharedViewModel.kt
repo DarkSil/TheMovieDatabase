@@ -2,6 +2,7 @@ package com.gliskstudio.themoviedatabaseta.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil3.ImageLoader
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.domain.usecase.GetDownloadedListUseCase
@@ -35,7 +36,8 @@ class SharedViewModel @Inject constructor(
     private val triggerDownloadedUseCase: TriggerDownloadedUseCase,
     private val isLikedUseCase: IsLikedUseCase,
     private val isDownloadedUseCase: IsDownloadedUseCase,
-    private val getSearchedListUseCase: GetSearchedListUseCase
+    private val getSearchedListUseCase: GetSearchedListUseCase,
+    val imageLoader: ImageLoader
 ) : ViewModel() {
 
     private val _featuresListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)

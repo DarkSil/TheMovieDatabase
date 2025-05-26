@@ -22,14 +22,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import coil3.request.error
-import coil3.request.placeholder
 import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.utils.Utils
+import com.gliskstudio.themoviedatabaseta.view.sharedInstances.BaseUrlImage
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.PlayPauseImage
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.SaveImage
 import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
@@ -50,18 +46,14 @@ fun CategoryItem(
     ) {
         val context = LocalContext.current
 
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(item.imageUrl)
-                .crossfade(true)
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.placeholder)
-                .build(),
-            contentDescription = stringResource(R.string.movie_poster),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
+        BaseUrlImage(
+            context,
+            item.imageUrl,
+            ContentScale.Crop,
+            Modifier
                 .size(120.dp)
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(16.dp)),
+            stringResource(R.string.movie_poster)
         )
 
         Column (

@@ -19,15 +19,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import coil3.request.error
-import coil3.request.placeholder
-import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.BackButton
+import com.gliskstudio.themoviedatabaseta.view.sharedInstances.BaseUrlImage
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.SaveImage
 import com.gliskstudio.themoviedatabaseta.view.theme.Black25
 import com.gliskstudio.themoviedatabaseta.view.theme.Black50
@@ -43,16 +38,11 @@ fun DetailsHeader(
         val (image, back, title) = createRefs()
         val context = LocalContext.current
 
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(item.imageUrl)
-                .placeholder(R.drawable.placeholder_big)
-                .error(R.drawable.placeholder_big)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
+        BaseUrlImage(
+            context,
+            item.imageUrl,
+            ContentScale.Crop,
+            Modifier
                 .fillMaxWidth()
                 .aspectRatio(4.1f/3.5f)
                 .constrainAs(image) {
