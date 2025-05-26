@@ -43,6 +43,8 @@ class SharedViewModel @Inject constructor(
     private val _downloadedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
     val downloadedListState : StateFlow<LoadingStatus> = _downloadedListState
 
+    private val cachedItems = mutableMapOf<Int, MovieItem>()
+
     init {
         loadFeatures()
         loadLiked()
@@ -65,7 +67,11 @@ class SharedViewModel @Inject constructor(
             _likedListState.value = LoadingStatus.InProgress
             getLikedListUseCase().collectLatest {
                 val results = it.map { id ->
-                    async(Dispatchers.IO) { loadById(id) }
+                    async(Dispatchers.IO) {
+                        cachedItems[id] ?: loadById(id)?.also { item ->
+                            cachedItems[id] = item
+                        }
+                    }
                 }
                 _likedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
             }
@@ -77,7 +83,11 @@ class SharedViewModel @Inject constructor(
             _downloadedListState.value = LoadingStatus.InProgress
             getDownloadedListUseCase().collectLatest {
                 val results = it.map { id ->
-                    async(Dispatchers.IO) { loadById(id) }
+                    async(Dispatchers.IO) {
+                        cachedItems[id] ?: loadById(id)?.also { item ->
+                            cachedItems[id] = item
+                        }
+                    }
                 }
                 _downloadedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
             }
