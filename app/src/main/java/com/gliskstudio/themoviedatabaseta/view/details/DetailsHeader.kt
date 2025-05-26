@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -35,6 +36,7 @@ import com.gliskstudio.themoviedatabaseta.view.sharedInstances.SaveImage
 @Composable
 fun DetailsHeader(
     item: MovieItem,
+    paddingTop: Dp,
     onBackPressed: () -> Unit
 ) {
     ConstraintLayout {
@@ -66,7 +68,8 @@ fun DetailsHeader(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                 }
-                .padding(12.dp),
+                // PaddingTop contains top insets padding so I can place the button
+                .padding(12.dp, 12.dp + paddingTop),
             onBackPressed = onBackPressed
         )
 
@@ -113,5 +116,5 @@ fun DetailsHeader(
 @Preview
 @Composable
 private fun Preview() {
-    DetailsHeader(Utils.mockMovieItem()) {}
+    DetailsHeader(Utils.mockMovieItem(), 0.dp) {}
 }

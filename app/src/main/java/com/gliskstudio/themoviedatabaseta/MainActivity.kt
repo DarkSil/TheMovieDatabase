@@ -6,12 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gliskstudio.themoviedatabaseta.ui.theme.TheMovieDatabaseTATheme
@@ -36,13 +34,10 @@ class MainActivity : ComponentActivity() {
 private fun Base(padding: PaddingValues, controller: NavHostController) {
     SearchContainer(
         controller = controller,
+        padding,
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
-            .padding(0.dp, 10.dp, 0.dp, 0.dp)
-    ) {
-        AppNavigation(controller)
-    }
+    )
 }
 
 @Preview(

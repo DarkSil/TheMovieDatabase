@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -35,6 +36,7 @@ object DetailsScreen {
 @Composable
 fun DetailsScreen(
     id: Int,
+    paddingTop: Dp,
     controller: NavHostController
 ) {
     // TODO Get MovieItem by ID
@@ -50,7 +52,7 @@ fun DetailsScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            DetailsHeader(item) {
+            DetailsHeader(item, paddingTop) {
                 controller.popBackStack()
             }
             DetailsBody(item)
@@ -82,6 +84,6 @@ fun DetailsScreen(
 private fun Preview() {
     val controller = rememberNavController()
     Scaffold { padding ->
-        DetailsScreen(0, controller)
+        DetailsScreen(0, padding.calculateTopPadding(), controller)
     }
 }

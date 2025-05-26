@@ -1,6 +1,7 @@
 package com.gliskstudio.themoviedatabaseta
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,7 +19,10 @@ object AppNavigation {
 }
 
 @Composable
-fun AppNavigation(controller: NavHostController) {
+fun AppNavigation(
+    controller: NavHostController,
+    paddingTop: Dp
+) {
     NavHost(
         controller,
         startDestination = MainScreen.route
@@ -60,7 +64,7 @@ fun AppNavigation(controller: NavHostController) {
         ) {
             val id = it.arguments?.getInt(DetailsScreen.detailsArgument) ?: -1
             // TODO Check inside if id is not -1
-            DetailsScreen(id, controller)
+            DetailsScreen(id, paddingTop, controller)
         }
     }
 }
