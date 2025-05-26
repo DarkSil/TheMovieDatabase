@@ -68,7 +68,7 @@ class SearchRepositoryImpl @Inject constructor(
                     it.toItem()
                 }
 
-                if (list.isNullOrEmpty()) {
+                if (list == null) {
                     lastSearchedRequestedPage--
                     return LoadingStatus.Error(-1)
                 }

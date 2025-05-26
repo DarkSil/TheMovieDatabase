@@ -9,7 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -18,13 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun SearchButton(
-    query: MutableState<String>,
+    query: MutableStateFlow<String>,
     searchClick: () -> Unit
 ) {
-    val isSearchButtonVisible = query.value.isEmpty()
+    val queryState = query.collectAsState()
+    val isSearchButtonVisible = queryState.value.isEmpty()
 
     Box(
         contentAlignment = Alignment.Center

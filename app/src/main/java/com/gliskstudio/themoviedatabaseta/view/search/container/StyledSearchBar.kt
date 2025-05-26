@@ -1,5 +1,7 @@
 package com.gliskstudio.themoviedatabaseta.view.search.container
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -10,18 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.gliskstudio.themoviedatabaseta.presentation.SharedViewModel
 import com.gliskstudio.themoviedatabaseta.view.search.SearchScreen
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.BackButton
 import com.gliskstudio.themoviedatabaseta.view.theme.SurfaceContainerHigh
@@ -49,11 +53,15 @@ fun StyledSearchBar(
                 controller.previousBackStackEntry != null
             }
 
+            val activity = LocalActivity.current as ComponentActivity
+            val viewModel = hiltViewModel<SharedViewModel>(activity)
+
             // TODO Query should be used within shared ViewModel
-            val query = rememberSaveable { mutableStateOf("") }
+            val query = viewModel.queryTextState
+            val queryState = query.collectAsState()
             val queryIsNotEmpty by remember {
                 derivedStateOf {
-                    query.value.isNotEmpty()
+                    queryState.value.isNotEmpty()
                 }
             }
 
@@ -70,8 +78,13 @@ fun StyledSearchBar(
                 controller.popBackStack()
             }
 
+            val onValueChange: (String) -> Unit = {
+                query.value = it
+            }
+
             SearchTextField(
-                query,
+                queryState,
+                onValueChange = onValueChange,
                 // #1 I used padding instead of arrangement to prevent jumping while back button appears
                 // I am not using start padding due to internal TextField's padding (20dp)
                 Modifier.weight(1f).padding(0.dp, 0.dp, 16.dp, 0.dp)

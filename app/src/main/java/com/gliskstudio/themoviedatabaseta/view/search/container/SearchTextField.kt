@@ -4,7 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,14 +17,13 @@ import com.gliskstudio.themoviedatabaseta.view.theme.Primary
 
 @Composable
 fun SearchTextField(
-    query: MutableState<String>,
+    query: State<String>,
+    onValueChange: (text: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     TextField(
         value = query.value,
-        onValueChange = {
-            query.value = it
-        },
+        onValueChange = onValueChange,
         placeholder = {
             Text(
                 text = "Search for movies",
@@ -51,5 +50,5 @@ fun SearchTextField(
 @Composable
 private fun Preview() {
     val state = remember { mutableStateOf("") }
-    SearchTextField(state)
+    SearchTextField(state, {})
 }

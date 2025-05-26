@@ -50,7 +50,6 @@ fun CategorySection(
 
         // I decided to play with AnimatedVisibilities. It increased the code size, but looks cool
 
-        // TODO Load items list with ViewModel
         AnimatedVisibility(
             visible = status is LoadingStatus.Loaded && status.list.isNotEmpty(),
             enter = fadeIn(tween(200, 100)),

@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -52,9 +55,20 @@ class SharedViewModel @Inject constructor(
     private val _searchedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
     val searchedListState : StateFlow<LoadingStatus> = _searchedListState
 
-    val queryTextState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+    val queryTextState = MutableStateFlow("")
 
     private val cachedItems = mutableMapOf<Int, MovieItem>()
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            queryTextState.debounce(500)
+                .filter { it.isNotBlank() }
+                .distinctUntilChanged()
+                .collectLatest {
+                    loadSearched(queryTextState.value)
+                }
+        }
+    }
 
     fun loadFeatures() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -115,7 +129,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun loadSearched(query: String = "aba") {
+    fun loadSearched(query: String = queryTextState.value) {
         viewModelScope.launch(Dispatchers.IO) {
             _searchedListState.value = LoadingStatus.InProgress
             _searchedListState.value = getSearchedListUseCase(query)
@@ -142,6 +156,10 @@ class SharedViewModel @Inject constructor(
 
     fun isDownloaded(id: Int) : Flow<Boolean> {
         return isDownloadedUseCase(id)
+    }
+
+    fun onValueChange(it: String) {
+        queryTextState.value = it
     }
 
 }

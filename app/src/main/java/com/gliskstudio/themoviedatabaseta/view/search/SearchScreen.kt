@@ -36,10 +36,8 @@ fun SearchScreen(controller: NavHostController) {
         val activity = LocalActivity.current as ComponentActivity
         val sharedViewModel = hiltViewModel<SharedViewModel>(activity)
 
-        val query = "ola"
-
-        LaunchedEffect(query) {
-            sharedViewModel.loadSearched(query)
+        LaunchedEffect(true) {
+            sharedViewModel.loadSearched()
         }
 
         val categoryType = CategoryType.Searched()
