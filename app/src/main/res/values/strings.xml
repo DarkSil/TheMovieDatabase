@@ -15,10 +15,13 @@
     <string name="play_button">Play button</string>
     <string name="pause_button">Pause button</string>
     <string name="date_and_rating">%1$s • Rating %2$s</string>
+    <string name="rating">Rating %1$s</string>
     <string name="back_button">Back button</string>
     <string name="search_button">Search button</string>
     <string name="clear_button">Clear button</string>
     <string name="oops_message">Oops, something went wrong!\nError code is %1$s</string>
     <string name="type_to_search">Type To Search</string>
     <string name="nothing_found">Nothing Found</string>
+    <string name="download">Download</string>
+    <string name="watch">Watch</string>
 </resources>

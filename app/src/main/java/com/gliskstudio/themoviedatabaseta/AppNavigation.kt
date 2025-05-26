@@ -6,10 +6,16 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.gliskstudio.themoviedatabaseta.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
+import com.gliskstudio.themoviedatabaseta.view.details.DetailsScreen
 import com.gliskstudio.themoviedatabaseta.view.main.MainScreen
 import com.gliskstudio.themoviedatabaseta.view.search.SearchScreen
+
+object AppNavigation {
+    const val scheme = "moviedatabase://"
+}
 
 @Composable
 fun AppNavigation(controller: NavHostController) {
@@ -20,6 +26,7 @@ fun AppNavigation(controller: NavHostController) {
         composable(MainScreen.route) {
             MainScreen(controller)
         }
+
         composable(
             route = CategoryScreen.route,
             arguments = listOf(
@@ -33,8 +40,27 @@ fun AppNavigation(controller: NavHostController) {
             val category = CategoryType.fromCategoryId(id)
             CategoryScreen(category, controller)
         }
+
         composable(SearchScreen.route) {
             SearchScreen(controller)
+        }
+
+        composable(
+            route = DetailsScreen.route,
+            arguments = listOf(
+                navArgument(DetailsScreen.detailsArgument) {
+                    type = NavType.IntType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = AppNavigation.scheme + DetailsScreen.route
+                }
+            )
+        ) {
+            val id = it.arguments?.getInt(DetailsScreen.detailsArgument) ?: -1
+            // TODO Check inside if id is not -1
+            DetailsScreen(id, controller)
         }
     }
 }

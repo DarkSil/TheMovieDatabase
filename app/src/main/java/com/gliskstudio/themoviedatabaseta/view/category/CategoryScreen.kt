@@ -14,6 +14,7 @@ import com.gliskstudio.themoviedatabaseta.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.model.LoadStatus
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
+import com.gliskstudio.themoviedatabaseta.view.details.DetailsScreen
 
 object CategoryScreen {
     const val categoryArgument = "categoryId"
@@ -29,8 +30,8 @@ fun CategoryScreen(
     categoryType: CategoryType,
     controller: NavHostController
 ) {
-    val onItemClick : (id: Int) -> Unit = {
-        // TODO Item Click
+    val onItemClick : (id: Int) -> Unit = { id ->
+        controller.navigate(DetailsScreen.prepareRoute(id))
     }
     Box (
         modifier = Modifier

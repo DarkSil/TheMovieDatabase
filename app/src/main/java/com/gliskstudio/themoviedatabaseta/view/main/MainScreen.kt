@@ -21,6 +21,7 @@ import com.gliskstudio.themoviedatabaseta.model.LoadStatus
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
+import com.gliskstudio.themoviedatabaseta.view.details.DetailsScreen
 import com.gliskstudio.themoviedatabaseta.view.main.purposeSection.PurposeSection
 
 object MainScreen {
@@ -44,7 +45,7 @@ fun MainScreen (controller: NavHostController) {
         val status = LoadStatus.Loaded(Utils.mockMovieList(true))
 
         val onItemClick: (id: Int) -> Unit = { id ->
-            // TODO Navigate to item
+            controller.navigate(DetailsScreen.prepareRoute(id))
         }
 
         val onCategoryClick: (categoryType: CategoryType) -> Unit = { categoryType ->

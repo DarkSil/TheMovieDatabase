@@ -33,6 +33,7 @@ fun SaveImage(
 ) {
     val contrastModifier = if(contrastRequired) {
         Modifier
+            .size(32.dp)
             .clip(RoundedCornerShape(6.dp))
             .background(White20)
             .border(0.5.dp, White, RoundedCornerShape(6.dp))

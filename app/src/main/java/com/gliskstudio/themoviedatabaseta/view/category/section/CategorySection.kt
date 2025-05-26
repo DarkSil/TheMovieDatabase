@@ -74,6 +74,7 @@ fun CategorySection(
                     .fillMaxSize()
                     .padding(0.dp, 24.dp)
             ) {
+                // TODO Custom
                 CircularProgressIndicator(
                     modifier = Modifier.size(64.dp)
                 )

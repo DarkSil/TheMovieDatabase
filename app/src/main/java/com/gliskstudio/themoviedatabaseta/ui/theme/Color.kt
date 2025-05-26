@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.Color
 val White = Color(0xFFFFFFFF)
 val White20 = Color(0x33FFFFFF)
 val Black = Color(0xFF000000)
+val Black25 = Color(0x40000000)
+val Black50 = Color(0x80000000)
 
 val Primary = Color(0xFF6750A4)
 val OnPrimary = Color(0xFFFFFFFF)
