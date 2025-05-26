@@ -1,6 +1,8 @@
 package com.gliskstudio.themoviedatabaseta.di
 
+import com.gliskstudio.themoviedatabaseta.data.repository.LocalSearchRepositoryImpl
 import com.gliskstudio.themoviedatabaseta.data.repository.SearchRepositoryImpl
+import com.gliskstudio.themoviedatabaseta.domain.repository.LocalSearchRepository
 import com.gliskstudio.themoviedatabaseta.domain.repository.SearchRepository
 import dagger.Binds
 import dagger.Module
@@ -17,4 +19,10 @@ abstract class RepositoryModule {
     abstract fun bindSearchRepository(
         searchRepositoryImpl: SearchRepositoryImpl
     ): SearchRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLocalSearchRepository(
+        localSearchRepositoryImpl: LocalSearchRepositoryImpl
+    ): LocalSearchRepository
 }

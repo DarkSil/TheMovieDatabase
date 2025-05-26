@@ -72,6 +72,8 @@ fun CategoryItem(
             Text(
                 text = item.movieTitle,
                 fontSize = 22.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
 
             Text(

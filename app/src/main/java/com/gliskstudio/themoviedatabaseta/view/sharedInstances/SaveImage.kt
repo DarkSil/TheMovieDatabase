@@ -1,5 +1,7 @@
 package com.gliskstudio.themoviedatabaseta.view.sharedInstances
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,10 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
@@ -20,7 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gliskstudio.themoviedatabaseta.R
+import com.gliskstudio.themoviedatabaseta.presentation.SharedViewModel
 import com.gliskstudio.themoviedatabaseta.view.theme.Black
 import com.gliskstudio.themoviedatabaseta.view.theme.White
 import com.gliskstudio.themoviedatabaseta.view.theme.White20
@@ -31,6 +33,9 @@ fun SaveImage(
     modifier: Modifier = Modifier,
     contrastRequired: Boolean = false
 ) {
+    val activity = LocalActivity.current as ComponentActivity
+    val sharedViewModel = hiltViewModel<SharedViewModel>(activity)
+
     val contrastModifier = if(contrastRequired) {
         Modifier
             .size(32.dp)
@@ -42,11 +47,11 @@ fun SaveImage(
         Modifier
     }
 
-    var isSaved by rememberSaveable { mutableStateOf(false) } // TODO Get from viewmodel
+    val isSaved by sharedViewModel.isLiked(id).collectAsState(null)
 
     Image(
         painter = painterResource(
-            if (isSaved)
+            if (isSaved == true)
                 R.drawable.ic_save_enabled
             else
                 R.drawable.ic_save_disabled
@@ -55,15 +60,14 @@ fun SaveImage(
         colorFilter = ColorFilter.tint(Black, BlendMode.SrcIn),
         modifier = Modifier
             .clickable {
-                isSaved = !isSaved
-                // TODO Save with id
+                sharedViewModel.triggerLiked(id)
             }
             .then(contrastModifier)
             .then(modifier)
     )
 }
 
-@Preview
+@Preview(apiLevel = 34)
 @Composable
 private fun Preview() {
     SaveImage(1, Modifier.size(24.dp), true)

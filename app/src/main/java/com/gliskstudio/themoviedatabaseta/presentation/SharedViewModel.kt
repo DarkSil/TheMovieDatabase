@@ -1,0 +1,109 @@
+package com.gliskstudio.themoviedatabaseta.presentation
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
+import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetDownloadedListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetFeaturesListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetLikedListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetMovieByIdUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.IsDownloadedUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.IsLikedUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.TriggerDownloadedUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.TriggerLikedUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class SharedViewModel @Inject constructor(
+    private val getFeaturesListUseCase: GetFeaturesListUseCase,
+    private val getMovieByIdUseCase: GetMovieByIdUseCase,
+    private val getLikedListUseCase: GetLikedListUseCase,
+    private val getDownloadedListUseCase: GetDownloadedListUseCase,
+    private val triggerLikedUseCase: TriggerLikedUseCase,
+    private val triggerDownloadedUseCase: TriggerDownloadedUseCase,
+    private val isLikedUseCase: IsLikedUseCase,
+    private val isDownloadedUseCase: IsDownloadedUseCase
+) : ViewModel() {
+
+    private val _featuresListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+    val featuresListState : StateFlow<LoadingStatus> = _featuresListState
+
+    private val _likedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+    val likedListState : StateFlow<LoadingStatus> = _likedListState
+
+    private val _downloadedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+    val downloadedListState : StateFlow<LoadingStatus> = _downloadedListState
+
+    init {
+        loadFeatures()
+        loadLiked()
+        loadDownloaded()
+    }
+
+    fun loadFeatures() {
+        viewModelScope.launch {
+            _featuresListState.value = LoadingStatus.InProgress
+            _featuresListState.value = getFeaturesListUseCase()
+        }
+    }
+
+    suspend fun loadById(id: Int): MovieItem? {
+        return getMovieByIdUseCase(id)
+    }
+
+    fun loadLiked() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _likedListState.value = LoadingStatus.InProgress
+            getLikedListUseCase().collectLatest {
+                val results = it.map { id ->
+                    async(Dispatchers.IO) { loadById(id) }
+                }
+                _likedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
+            }
+        }
+    }
+
+    fun loadDownloaded() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _downloadedListState.value = LoadingStatus.InProgress
+            getDownloadedListUseCase().collectLatest {
+                val results = it.map { id ->
+                    async(Dispatchers.IO) { loadById(id) }
+                }
+                _downloadedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
+            }
+        }
+    }
+
+    fun triggerLiked(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _likedListState.value = LoadingStatus.InProgress
+            triggerLikedUseCase(id)
+        }
+    }
+
+    fun triggerDownloaded(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _downloadedListState.value = LoadingStatus.InProgress
+            triggerDownloadedUseCase(id)
+        }
+    }
+
+    fun isLiked(id: Int) : Flow<Boolean> {
+        return isLikedUseCase(id)
+    }
+
+    fun isDownloaded(id: Int) : Flow<Boolean> {
+        return isDownloadedUseCase(id)
+    }
+
+}

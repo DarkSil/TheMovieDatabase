@@ -1,5 +1,11 @@
 package com.gliskstudio.themoviedatabaseta.view.main
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,8 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
-import com.gliskstudio.themoviedatabaseta.presentation.MainViewModel
-import com.gliskstudio.themoviedatabaseta.utils.Utils
+import com.gliskstudio.themoviedatabaseta.presentation.SharedViewModel
 import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
 import com.gliskstudio.themoviedatabaseta.view.details.DetailsScreen
@@ -42,14 +47,14 @@ fun MainScreen (controller: NavHostController) {
             .padding(16.dp, 0.dp)
             .verticalScroll(scrollState)
     ) {
-        val mainViewModel = hiltViewModel<MainViewModel>()
-        val featuresStatus by mainViewModel.featuresListState.collectAsState()
+        val activity = LocalActivity.current as ComponentActivity
+        val sharedViewModel = hiltViewModel<SharedViewModel>(activity)
 
-        // TODO Get from preferences
+        val featuresStatus by sharedViewModel.featuresListState.collectAsState()
+        val likedStatus by sharedViewModel.likedListState.collectAsState()
+        val downloadedStatus by sharedViewModel.downloadedListState.collectAsState()
+
         val isPurposeVisible = rememberSaveable { mutableStateOf(true) }
-
-        // TODO Get from viewmodel
-        val status = LoadingStatus.Loaded(Utils.mockMovieList(true))
 
         val onItemClick: (id: Int) -> Unit = { id ->
             controller.navigate(DetailsScreen.prepareRoute(id))
@@ -69,18 +74,34 @@ fun MainScreen (controller: NavHostController) {
             onCategoryClick = onCategoryClick,
             onItemClick = onItemClick
         )
-        CategorySection(
-            categoryType = CategoryType.Liked(true),
-            status,
-            onCategoryClick = onCategoryClick,
-            onItemClick = onItemClick
-        )
-        CategorySection(
-            categoryType = CategoryType.Downloaded(true),
-            status,
-            onCategoryClick = onCategoryClick,
-            onItemClick = onItemClick
-        )
+        AnimatedVisibility(
+            visible = (likedStatus is LoadingStatus.Loaded
+                    && (likedStatus as LoadingStatus.Loaded).list.isNotEmpty())
+                || likedStatus is LoadingStatus.InProgress,
+            enter = fadeIn(tween(300)),
+            exit = fadeOut(tween(300))
+        ) {
+            CategorySection(
+                categoryType = CategoryType.Liked(true),
+                likedStatus,
+                onCategoryClick = onCategoryClick,
+                onItemClick = onItemClick
+            )
+        }
+        AnimatedVisibility(
+            visible = (downloadedStatus is LoadingStatus.Loaded
+                    && (downloadedStatus as LoadingStatus.Loaded).list.isNotEmpty())
+                    || downloadedStatus is LoadingStatus.InProgress,
+            enter = fadeIn(tween(300)),
+            exit = fadeOut(tween(300))
+        ) {
+            CategorySection(
+                categoryType = CategoryType.Downloaded(true),
+                downloadedStatus,
+                onCategoryClick = onCategoryClick,
+                onItemClick = onItemClick
+            )
+        }
 
         Spacer(Modifier.height(16.dp))
 
