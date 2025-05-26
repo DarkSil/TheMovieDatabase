@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,12 @@ fun MainScreen (controller: NavHostController) {
         val featuresStatus by sharedViewModel.featuresListState.collectAsState()
         val likedStatus by sharedViewModel.likedListState.collectAsState()
         val downloadedStatus by sharedViewModel.downloadedListState.collectAsState()
+
+        LaunchedEffect(true) {
+            sharedViewModel.loadFeaturesFirstPage()
+            sharedViewModel.loadLiked()
+            sharedViewModel.loadDownloaded()
+        }
 
         val isPurposeVisible = rememberSaveable { mutableStateOf(true) }
 

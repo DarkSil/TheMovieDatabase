@@ -4,10 +4,10 @@ import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.domain.repository.SearchRepository
 import javax.inject.Inject
 
-class GetFeaturesListUseCase @Inject constructor(
+class GetSearchedListUseCase @Inject constructor(
     private val repository: SearchRepository
 ) {
-    suspend operator fun invoke(): LoadingStatus {
-        return repository.getFeaturedList(false)
+    suspend operator fun invoke(query: String): LoadingStatus {
+        return repository.getSearchedList(query)
     }
 }

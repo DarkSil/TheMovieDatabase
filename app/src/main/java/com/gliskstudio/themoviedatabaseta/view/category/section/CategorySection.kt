@@ -58,7 +58,7 @@ fun CategorySection(
         ) {
             CategoryList(
                 if (status is LoadingStatus.Loaded) status.list else emptyList(),
-                categoryType.isLimited,
+                categoryType,
                 onItemClick
             )
         }

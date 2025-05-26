@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.domain.usecase.GetDownloadedListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetFeaturesFirstPageUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.GetFeaturesListUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.GetLikedListUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.GetMovieByIdUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetSearchedListUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.IsDownloadedUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.IsLikedUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.TriggerDownloadedUseCase
@@ -24,6 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor(
+    private val getFeaturesFirstPageUseCase: GetFeaturesFirstPageUseCase,
     private val getFeaturesListUseCase: GetFeaturesListUseCase,
     private val getMovieByIdUseCase: GetMovieByIdUseCase,
     private val getLikedListUseCase: GetLikedListUseCase,
@@ -31,7 +34,8 @@ class SharedViewModel @Inject constructor(
     private val triggerLikedUseCase: TriggerLikedUseCase,
     private val triggerDownloadedUseCase: TriggerDownloadedUseCase,
     private val isLikedUseCase: IsLikedUseCase,
-    private val isDownloadedUseCase: IsDownloadedUseCase
+    private val isDownloadedUseCase: IsDownloadedUseCase,
+    private val getSearchedListUseCase: GetSearchedListUseCase
 ) : ViewModel() {
 
     private val _featuresListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
@@ -43,18 +47,24 @@ class SharedViewModel @Inject constructor(
     private val _downloadedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
     val downloadedListState : StateFlow<LoadingStatus> = _downloadedListState
 
+    private val _searchedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+    val searchedListState : StateFlow<LoadingStatus> = _searchedListState
+
+    val queryTextState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+
     private val cachedItems = mutableMapOf<Int, MovieItem>()
 
-    init {
-        loadFeatures()
-        loadLiked()
-        loadDownloaded()
-    }
-
     fun loadFeatures() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _featuresListState.value = LoadingStatus.InProgress
             _featuresListState.value = getFeaturesListUseCase()
+        }
+    }
+
+    fun loadFeaturesFirstPage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _featuresListState.value = LoadingStatus.InProgress
+            _featuresListState.value = getFeaturesFirstPageUseCase()
         }
     }
 
@@ -63,6 +73,10 @@ class SharedViewModel @Inject constructor(
     }
 
     fun loadLiked() {
+        val value = _likedListState.value
+        if (value is LoadingStatus.Loaded) {
+            return
+        }
         viewModelScope.launch(Dispatchers.IO) {
             _likedListState.value = LoadingStatus.InProgress
             getLikedListUseCase().collectLatest {
@@ -79,6 +93,10 @@ class SharedViewModel @Inject constructor(
     }
 
     fun loadDownloaded() {
+        val value = _downloadedListState.value
+        if (value is LoadingStatus.Loaded) {
+            return
+        }
         viewModelScope.launch(Dispatchers.IO) {
             _downloadedListState.value = LoadingStatus.InProgress
             getDownloadedListUseCase().collectLatest {
@@ -89,8 +107,16 @@ class SharedViewModel @Inject constructor(
                         }
                     }
                 }
-                _downloadedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
+                _downloadedListState.value =
+                    LoadingStatus.Loaded(results.mapNotNull { it.await() })
             }
+        }
+    }
+
+    fun loadSearched(query: String = "aba") {
+        viewModelScope.launch(Dispatchers.IO) {
+            _searchedListState.value = LoadingStatus.InProgress
+            _searchedListState.value = getSearchedListUseCase(query)
         }
     }
 

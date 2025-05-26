@@ -15,4 +15,7 @@ interface ApiService {
     @GET("3/movie/{id}")
     suspend fun getMovieById(@Path("id") id: Int): Response<MovieDto>
 
+    @GET("3/search/movie?include_adult=false&language=en-US")
+    suspend fun getSearchedList(@Query("page") page: Int, @Query("query") query: String): Response<MoviesListDto>
+
 }
