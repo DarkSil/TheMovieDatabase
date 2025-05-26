@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.gliskstudio.themoviedatabaseta.ui.theme.SurfaceContainerHigh
 import com.gliskstudio.themoviedatabaseta.view.search.SearchScreen
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.BackButton
+import com.gliskstudio.themoviedatabaseta.view.theme.SurfaceContainerHigh
 
 @Composable
 fun StyledSearchBar(

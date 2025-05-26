@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.gliskstudio.themoviedatabaseta.R
-import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurfaceVariant
+import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
 
 @Composable
 fun SearchButton(

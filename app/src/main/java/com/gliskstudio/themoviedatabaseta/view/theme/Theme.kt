@@ -1,4 +1,4 @@
-package com.gliskstudio.themoviedatabaseta.ui.theme
+package com.gliskstudio.themoviedatabaseta.view.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme

@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.gliskstudio.themoviedatabaseta.ui.theme.TheMovieDatabaseTATheme
 import com.gliskstudio.themoviedatabaseta.view.search.container.SearchContainer
+import com.gliskstudio.themoviedatabaseta.view.theme.TheMovieDatabaseTATheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

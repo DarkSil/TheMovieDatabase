@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.model.MovieItem
-import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurface
-import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurfaceVariant
+import com.gliskstudio.themoviedatabaseta.view.theme.OnSurface
+import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
 
 @Composable
 fun DetailsBody(item: MovieItem) {

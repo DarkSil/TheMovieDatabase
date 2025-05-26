@@ -26,12 +26,12 @@ import coil3.request.error
 import coil3.request.placeholder
 import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.model.MovieItem
-import com.gliskstudio.themoviedatabaseta.ui.theme.Black25
-import com.gliskstudio.themoviedatabaseta.ui.theme.Black50
-import com.gliskstudio.themoviedatabaseta.ui.theme.White
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.BackButton
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.SaveImage
+import com.gliskstudio.themoviedatabaseta.view.theme.Black25
+import com.gliskstudio.themoviedatabaseta.view.theme.Black50
+import com.gliskstudio.themoviedatabaseta.view.theme.White
 
 @Composable
 fun DetailsHeader(

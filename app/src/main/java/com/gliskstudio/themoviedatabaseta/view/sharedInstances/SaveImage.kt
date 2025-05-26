@@ -21,9 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gliskstudio.themoviedatabaseta.R
-import com.gliskstudio.themoviedatabaseta.ui.theme.Black
-import com.gliskstudio.themoviedatabaseta.ui.theme.White
-import com.gliskstudio.themoviedatabaseta.ui.theme.White20
+import com.gliskstudio.themoviedatabaseta.view.theme.Black
+import com.gliskstudio.themoviedatabaseta.view.theme.White
+import com.gliskstudio.themoviedatabaseta.view.theme.White20
 
 @Composable
 fun SaveImage(

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.model.CategoryType
-import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurfaceVariant
+import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
 
 @Composable
 fun CategoryTitle(

@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurface
-import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurfaceVariant
-import com.gliskstudio.themoviedatabaseta.ui.theme.Primary
+import com.gliskstudio.themoviedatabaseta.view.theme.OnSurface
+import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
+import com.gliskstudio.themoviedatabaseta.view.theme.Primary
 
 @Composable
 fun SearchTextField(

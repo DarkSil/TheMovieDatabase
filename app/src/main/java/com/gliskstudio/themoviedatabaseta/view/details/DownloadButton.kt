@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gliskstudio.themoviedatabaseta.R
-import com.gliskstudio.themoviedatabaseta.ui.theme.OnSurface
-import com.gliskstudio.themoviedatabaseta.ui.theme.SurfaceContainerLow
+import com.gliskstudio.themoviedatabaseta.view.theme.OnSurface
+import com.gliskstudio.themoviedatabaseta.view.theme.SurfaceContainerLow
 
 @Composable
 fun DownloadButton(
