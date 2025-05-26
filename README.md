@@ -28,4 +28,6 @@ Tech stack:
 9. Media Playback Handling - ExoPlayer
 10. Media Control (Notification) - MediaSession 
 11. Image Loading - Coil
+
+TODO - Fix search, fix UI blicks, to do entire media part, to do downloads
 </pre>
