@@ -1,4 +1,4 @@
-package com.gliskstudio.themoviedatabaseta.model
+package com.gliskstudio.themoviedatabaseta.domain.model
 
 data class MovieItem(
     val id: Int,
@@ -7,6 +7,6 @@ data class MovieItem(
     val imageUrl: String,
     val rating: String,
     val releaseDate: String,
-    var isLiked: Boolean = false, // TODO
-    var isDownloaded: Boolean = false // TODO
+    var isLiked: Boolean = false,
+    var isDownloaded: Boolean = false
 )

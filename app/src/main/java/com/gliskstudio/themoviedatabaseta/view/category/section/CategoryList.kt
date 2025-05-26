@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.gliskstudio.themoviedatabaseta.model.MovieItem
+import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.category.section.item.CategoryItem
 
@@ -23,8 +23,9 @@ fun CategoryList(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            for (item in list) {
-                CategoryItem(item, onItemClick)
+            val size = if (list.size <= 3) list.size else 3
+            for (position in 0..< size) {
+                CategoryItem(list[position], onItemClick)
             }
         }
     } else {

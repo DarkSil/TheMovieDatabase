@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gliskstudio.themoviedatabaseta.R
-import com.gliskstudio.themoviedatabaseta.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
 
 @Composable

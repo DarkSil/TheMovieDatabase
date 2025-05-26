@@ -27,15 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gliskstudio.themoviedatabaseta.R
-import com.gliskstudio.themoviedatabaseta.model.CategoryType
-import com.gliskstudio.themoviedatabaseta.model.LoadStatus
+import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.theme.OnSurface
 
 @Composable
 fun CategorySection(
     categoryType: CategoryType,
-    status: LoadStatus,
+    status: LoadingStatus,
     onCategoryClick: (categoryType: CategoryType) -> Unit,
     onItemClick: (id: Int) -> Unit
 ) {
@@ -52,19 +52,19 @@ fun CategorySection(
 
         // TODO Load items list with ViewModel
         AnimatedVisibility(
-            visible = status is LoadStatus.Loaded && status.list.isNotEmpty(),
+            visible = status is LoadingStatus.Loaded && status.list.isNotEmpty(),
             enter = fadeIn(tween(200, 100)),
             exit = fadeOut(tween(200))
         ) {
             CategoryList(
-                if (status is LoadStatus.Loaded) status.list else emptyList(),
+                if (status is LoadingStatus.Loaded) status.list else emptyList(),
                 categoryType.isLimited,
                 onItemClick
             )
         }
 
         AnimatedVisibility(
-            visible = status is LoadStatus.InProgress,
+            visible = status is LoadingStatus.InProgress,
             enter = fadeIn(tween(200, 200)),
             exit = fadeOut(tween(200))
         ) {
@@ -82,20 +82,20 @@ fun CategorySection(
         }
 
         AnimatedVisibility(
-            visible = status is LoadStatus.EmptyQuery
-                    || (status is LoadStatus.Loaded && status.list.isEmpty())
-                    || status is LoadStatus.Error,
+            visible = status is LoadingStatus.EmptyQuery
+                    || (status is LoadingStatus.Loaded && status.list.isEmpty())
+                    || status is LoadingStatus.Error,
             enter = fadeIn(tween(200, 200)),
             exit = fadeOut(tween(200))
         ) {
             val text: String
             val imageResource: Int?
             when (status) {
-                LoadStatus.EmptyQuery -> {
+                LoadingStatus.EmptyQuery -> {
                     text = stringResource(R.string.type_to_search)
                     imageResource = R.drawable.ic_cursor
                 }
-                is LoadStatus.Error -> {
+                is LoadingStatus.Error -> {
                     text = stringResource(R.string.oops_message, status.errorCode)
                     imageResource = null
                 }
@@ -141,7 +141,7 @@ private fun Preview() {
     Scaffold { padding ->
         CategorySection(
             categoryType = CategoryType.Featured(true),
-            status = LoadStatus.Loaded(Utils.mockMovieList()),
+            status = LoadingStatus.Loaded(Utils.mockMovieList()),
             onCategoryClick = {},
             onItemClick = {}
         )

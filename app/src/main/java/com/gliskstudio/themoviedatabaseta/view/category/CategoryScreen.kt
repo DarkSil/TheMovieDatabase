@@ -10,8 +10,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.gliskstudio.themoviedatabaseta.model.CategoryType
-import com.gliskstudio.themoviedatabaseta.model.LoadStatus
+import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
 import com.gliskstudio.themoviedatabaseta.view.details.DetailsScreen
@@ -41,7 +41,7 @@ fun CategoryScreen(
         CategorySection(
             categoryType = categoryType,
             // TODO Load list
-            status = LoadStatus.Loaded(Utils.mockMovieList()),
+            status = LoadingStatus.Loaded(Utils.mockMovieList()),
             onCategoryClick = {},
             onItemClick = onItemClick
         )

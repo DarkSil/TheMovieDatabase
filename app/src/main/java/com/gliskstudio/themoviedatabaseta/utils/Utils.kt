@@ -1,6 +1,6 @@
 package com.gliskstudio.themoviedatabaseta.utils
 
-import com.gliskstudio.themoviedatabaseta.model.MovieItem
+import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 
 object Utils {
 

@@ -10,8 +10,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.gliskstudio.themoviedatabaseta.model.CategoryType
-import com.gliskstudio.themoviedatabaseta.model.LoadStatus
+import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
 
 object SearchScreen {
@@ -26,11 +26,11 @@ fun SearchScreen(controller: NavHostController) {
             .padding(16.dp, 0.dp)
     ) {
         // TODO Get from ViewModel
-        val loadStatus: LoadStatus = LoadStatus.Error(302)
+        val loadingStatus: LoadingStatus = LoadingStatus.Error(302)
 
         CategorySection(
             categoryType = CategoryType.Searched(),
-            status = loadStatus,
+            status = loadingStatus,
             onCategoryClick = {},
             onItemClick = {}
         )

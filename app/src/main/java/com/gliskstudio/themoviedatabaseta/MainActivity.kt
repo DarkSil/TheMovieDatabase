@@ -14,7 +14,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gliskstudio.themoviedatabaseta.view.search.container.SearchContainer
 import com.gliskstudio.themoviedatabaseta.view.theme.TheMovieDatabaseTATheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

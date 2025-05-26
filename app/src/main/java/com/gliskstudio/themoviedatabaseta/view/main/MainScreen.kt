@@ -9,15 +9,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.gliskstudio.themoviedatabaseta.model.CategoryType
-import com.gliskstudio.themoviedatabaseta.model.LoadStatus
+import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
+import com.gliskstudio.themoviedatabaseta.presentation.MainViewModel
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
 import com.gliskstudio.themoviedatabaseta.view.category.section.CategorySection
@@ -38,11 +42,14 @@ fun MainScreen (controller: NavHostController) {
             .padding(16.dp, 0.dp)
             .verticalScroll(scrollState)
     ) {
+        val mainViewModel = hiltViewModel<MainViewModel>()
+        val featuresStatus by mainViewModel.featuresListState.collectAsState()
+
         // TODO Get from preferences
         val isPurposeVisible = rememberSaveable { mutableStateOf(true) }
 
         // TODO Get from viewmodel
-        val status = LoadStatus.Loaded(Utils.mockMovieList(true))
+        val status = LoadingStatus.Loaded(Utils.mockMovieList(true))
 
         val onItemClick: (id: Int) -> Unit = { id ->
             controller.navigate(DetailsScreen.prepareRoute(id))
@@ -58,7 +65,7 @@ fun MainScreen (controller: NavHostController) {
 
         CategorySection(
             categoryType = CategoryType.Featured(true),
-            status,
+            featuresStatus,
             onCategoryClick = onCategoryClick,
             onItemClick = onItemClick
         )

@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gliskstudio.themoviedatabaseta.R
-import com.gliskstudio.themoviedatabaseta.model.MovieItem
+import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.view.theme.OnSurface
 import com.gliskstudio.themoviedatabaseta.view.theme.OnSurfaceVariant
 

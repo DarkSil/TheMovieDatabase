@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.gliskstudio.themoviedatabaseta.model.CategoryType
+import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.view.category.CategoryScreen
 import com.gliskstudio.themoviedatabaseta.view.details.DetailsScreen
 import com.gliskstudio.themoviedatabaseta.view.main.MainScreen

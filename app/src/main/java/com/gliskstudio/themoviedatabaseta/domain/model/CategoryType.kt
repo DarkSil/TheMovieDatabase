@@ -1,4 +1,4 @@
-package com.gliskstudio.themoviedatabaseta.model
+package com.gliskstudio.themoviedatabaseta.domain.model
 
 import com.gliskstudio.themoviedatabaseta.R
 

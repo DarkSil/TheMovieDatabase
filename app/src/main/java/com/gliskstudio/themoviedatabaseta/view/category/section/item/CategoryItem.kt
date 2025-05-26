@@ -28,7 +28,7 @@ import coil3.request.crossfade
 import coil3.request.error
 import coil3.request.placeholder
 import com.gliskstudio.themoviedatabaseta.R
-import com.gliskstudio.themoviedatabaseta.model.MovieItem
+import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.PlayPauseImage
 import com.gliskstudio.themoviedatabaseta.view.sharedInstances.SaveImage
