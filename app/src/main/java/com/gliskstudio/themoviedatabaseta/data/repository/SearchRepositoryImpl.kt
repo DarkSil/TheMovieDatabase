@@ -25,9 +25,8 @@ class SearchRepositoryImpl @Inject constructor(
     }
 
     private suspend fun loadFeaturedList(firstOnly: Boolean): LoadingStatus {
-        // TODO Check if it's really required
         if (firstOnly && lastRequestedPage > 0) {
-            return LoadingStatus.Loaded(localFeaturedList.toList())
+            return LoadingStatus.Loaded(localFeaturedList.take(3))
         }
 
         if (nextPage > lastRequestedPage) {
