@@ -29,5 +29,8 @@ Tech stack:
 10. Media Control (Notification) - MediaSession 
 11. Image Loading - Coil
 
+Additionally I want to highlight resources usage - resources are in an SVG format to reduce app size
+and to have a flexibility with usage (colors, shapes etc)
+
 TODO - Fix search, fix UI blicks, to do entire media part, to do downloads
 </pre>
