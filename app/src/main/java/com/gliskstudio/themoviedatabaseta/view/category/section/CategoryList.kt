@@ -47,7 +47,7 @@ fun CategoryList(
                 modifier = Modifier.fillMaxSize(),
                 state = state
             ) {
-                items(list, key = { it.id }) {
+                items(list) {
                     CategoryItem(it, onItemClick)
                 }
 
