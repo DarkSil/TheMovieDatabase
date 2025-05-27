@@ -32,8 +32,9 @@ fun PurposeHeader(click : () -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // I wanted to re-use mipmap value but Compose is so cool it can't load adaptive-icon even using bitmap
         Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
+            painter = painterResource(R.drawable.logo),
             contentDescription = stringResource(R.string.app_logo),
             contentScale = ContentScale.Crop,
             modifier = Modifier
