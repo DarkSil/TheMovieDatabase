@@ -1,6 +1,6 @@
 package com.gliskstudio.themoviedatabaseta.view.search.container
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -63,8 +62,8 @@ fun SearchContainer(
     }
 
     val paddingTop = paddingValues.calculateTopPadding() + 10.dp
-    val animatedPadding by animateFloatAsState(
-        targetValue = if (isPaddingRequired) paddingTop.value else 0f,
+    val animatedPadding by animateDpAsState(
+        targetValue = if (isPaddingRequired) paddingTop else 0.dp,
         tween(300)
     )
     val layoutDirection = LocalLayoutDirection.current
@@ -74,7 +73,7 @@ fun SearchContainer(
             .fillMaxSize()
             .padding(
                 paddingValues.calculateStartPadding(layoutDirection),
-                Dp(animatedPadding),
+                animatedPadding,
                 paddingValues.calculateEndPadding(layoutDirection),
                 paddingValues.calculateBottomPadding(),
             )
