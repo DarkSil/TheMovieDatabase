@@ -3,16 +3,19 @@ package com.gliskstudio.themoviedatabaseta.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil3.ImageLoader
+import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
-import com.gliskstudio.themoviedatabaseta.domain.usecase.GetDownloadedListUseCase
-import com.gliskstudio.themoviedatabaseta.domain.usecase.GetFeaturesFirstPageUseCase
-import com.gliskstudio.themoviedatabaseta.domain.usecase.GetFeaturesListUseCase
-import com.gliskstudio.themoviedatabaseta.domain.usecase.GetLikedListUseCase
-import com.gliskstudio.themoviedatabaseta.domain.usecase.GetMovieByIdUseCase
-import com.gliskstudio.themoviedatabaseta.domain.usecase.GetSearchedListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetFeaturedFlow
+import com.gliskstudio.themoviedatabaseta.domain.usecase.GetSearchedFlow
 import com.gliskstudio.themoviedatabaseta.domain.usecase.IsDownloadedUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.IsLikedUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.LoadDownloadedListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.LoadFeaturesFirstPageUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.LoadFeaturesListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.LoadLikedListUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.LoadMovieByIdUseCase
+import com.gliskstudio.themoviedatabaseta.domain.usecase.LoadSearchedListUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.TriggerDownloadedUseCase
 import com.gliskstudio.themoviedatabaseta.domain.usecase.TriggerLikedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,84 +29,92 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor(
-    private val getFeaturesFirstPageUseCase: GetFeaturesFirstPageUseCase,
-    private val getFeaturesListUseCase: GetFeaturesListUseCase,
-    private val getMovieByIdUseCase: GetMovieByIdUseCase,
-    private val getLikedListUseCase: GetLikedListUseCase,
-    private val getDownloadedListUseCase: GetDownloadedListUseCase,
+    getFeaturedFlow: GetFeaturedFlow,
+    getSearchedFlow: GetSearchedFlow,
+    private val loadFeaturesFirstPageUseCase: LoadFeaturesFirstPageUseCase,
+    private val loadFeaturesListUseCase: LoadFeaturesListUseCase,
+    private val loadSearchedListUseCase: LoadSearchedListUseCase,
+    private val loadMovieByIdUseCase: LoadMovieByIdUseCase,
+
+    private val loadLikedListUseCase: LoadLikedListUseCase,
+    private val loadDownloadedListUseCase: LoadDownloadedListUseCase,
     private val triggerLikedUseCase: TriggerLikedUseCase,
     private val triggerDownloadedUseCase: TriggerDownloadedUseCase,
     private val isLikedUseCase: IsLikedUseCase,
     private val isDownloadedUseCase: IsDownloadedUseCase,
-    private val getSearchedListUseCase: GetSearchedListUseCase,
+
     val imageLoader: ImageLoader
 ) : ViewModel() {
+    // TODO Separate this viewModel and create local ones using it's own usecases
 
-    private val _featuresListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
-    val featuresListState : StateFlow<LoadingStatus> = _featuresListState
-
-    private val _likedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+    private val _likedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress())
     val likedListState : StateFlow<LoadingStatus> = _likedListState
 
-    private val _downloadedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
+    private val _downloadedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress())
     val downloadedListState : StateFlow<LoadingStatus> = _downloadedListState
 
-    private val _searchedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress)
-    val searchedListState : StateFlow<LoadingStatus> = _searchedListState
+    private val featuresListState : StateFlow<LoadingStatus> = getFeaturedFlow()
+    private val searchedListState : StateFlow<LoadingStatus> = getSearchedFlow()
 
     val queryTextState = MutableStateFlow("")
 
+    // TODO Move caching to new repository and add to cached items both "searched" and "featured" lists
     private val cachedItems = mutableMapOf<Int, MovieItem>()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             queryTextState.debounce(500)
                 .filter { it.isNotBlank() }
                 .distinctUntilChanged()
                 .collectLatest {
-                    loadSearched(queryTextState.value)
+                    withContext(Dispatchers.IO) {
+                        loadSearched()
+                    }
                 }
         }
     }
 
+    // TODO Features are not updating with scroll
     fun loadFeatures() {
         viewModelScope.launch(Dispatchers.IO) {
-            _featuresListState.value = LoadingStatus.InProgress
-            _featuresListState.value = getFeaturesListUseCase()
+            loadFeaturesListUseCase()
         }
     }
 
     fun loadFeaturesFirstPage() {
         viewModelScope.launch(Dispatchers.IO) {
-            _featuresListState.value = LoadingStatus.InProgress
-            _featuresListState.value = getFeaturesFirstPageUseCase()
+            loadFeaturesFirstPageUseCase()
         }
     }
 
     suspend fun loadById(id: Int): MovieItem? {
-        return getMovieByIdUseCase(id)
+        return loadMovieByIdUseCase(id)
     }
 
     fun loadLiked() {
+        // TODO Move to repository
         val value = _likedListState.value
         if (value is LoadingStatus.Loaded) {
             return
         }
-        viewModelScope.launch(Dispatchers.IO) {
-            _likedListState.value = LoadingStatus.InProgress
-            getLikedListUseCase().collectLatest {
-                val results = it.map { id ->
-                    async(Dispatchers.IO) {
-                        cachedItems[id] ?: loadById(id)?.also { item ->
-                            cachedItems[id] = item
+        viewModelScope.launch {
+            _likedListState.value = LoadingStatus.InProgress()
+            loadLikedListUseCase().collectLatest {
+                withContext(Dispatchers.IO) {
+                    val results = it.map { id ->
+                        async(Dispatchers.IO) {
+                            cachedItems[id] ?: loadById(id)?.also { item ->
+                                cachedItems[id] = item
+                            }
                         }
                     }
+                    _likedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
                 }
-                _likedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
             }
         }
     }
@@ -113,39 +124,75 @@ class SharedViewModel @Inject constructor(
         if (value is LoadingStatus.Loaded) {
             return
         }
-        viewModelScope.launch(Dispatchers.IO) {
-            _downloadedListState.value = LoadingStatus.InProgress
-            getDownloadedListUseCase().collectLatest {
-                val results = it.map { id ->
-                    async(Dispatchers.IO) {
-                        cachedItems[id] ?: loadById(id)?.also { item ->
-                            cachedItems[id] = item
+        viewModelScope.launch {
+            _downloadedListState.value = LoadingStatus.InProgress()
+            loadDownloadedListUseCase().collectLatest {
+                withContext(Dispatchers.IO) {
+                    val results = it.map { id ->
+                        async(Dispatchers.IO) {
+                            cachedItems[id] ?: loadById(id)?.also { item ->
+                                cachedItems[id] = item
+                            }
                         }
                     }
+                    _downloadedListState.value =
+                        LoadingStatus.Loaded(results.mapNotNull { it.await() })
                 }
-                _downloadedListState.value =
-                    LoadingStatus.Loaded(results.mapNotNull { it.await() })
             }
         }
     }
 
-    fun loadSearched(query: String = queryTextState.value) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _searchedListState.value = LoadingStatus.InProgress
-            _searchedListState.value = getSearchedListUseCase(query)
+    fun loadByCategory(categoryType: CategoryType) {
+        when (categoryType) {
+            is CategoryType.Featured -> {
+                loadFeaturesFirstPage()
+            }
+            is CategoryType.Searched -> {
+                loadSearched()
+            }
+            is CategoryType.Downloaded -> {
+                loadDownloaded()
+            }
+            is CategoryType.Liked -> {
+                loadLiked()
+            }
+        }
+    }
+
+    fun getFlowByCategory(categoryType: CategoryType): StateFlow<LoadingStatus> {
+        return when (categoryType) {
+            is CategoryType.Featured -> {
+                featuresListState
+            }
+            is CategoryType.Searched -> {
+                searchedListState
+            }
+            is CategoryType.Downloaded -> {
+                downloadedListState
+            }
+            is CategoryType.Liked -> {
+                likedListState
+            }
+        }
+    }
+
+    fun loadSearched() {
+        val query = queryTextState.value
+        if (query.isNotBlank()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                loadSearchedListUseCase(query)
+            }
         }
     }
 
     fun triggerLiked(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            _likedListState.value = LoadingStatus.InProgress
             triggerLikedUseCase(id)
         }
     }
 
     fun triggerDownloaded(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            _downloadedListState.value = LoadingStatus.InProgress
             triggerDownloadedUseCase(id)
         }
     }

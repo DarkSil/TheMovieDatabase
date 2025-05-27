@@ -4,10 +4,10 @@ import com.gliskstudio.themoviedatabaseta.domain.repository.LocalSearchRepositor
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetLikedListUseCase @Inject constructor(
+class LoadDownloadedListUseCase @Inject constructor(
     private val repository: LocalSearchRepository
 ) {
     operator fun invoke(): Flow<List<Int>> {
-        return repository.getLikedList()
+        return repository.getDownloadedList()
     }
 }

@@ -1,41 +1,35 @@
 package com.gliskstudio.themoviedatabaseta.view.category.section
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.gliskstudio.themoviedatabaseta.R
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
-import com.gliskstudio.themoviedatabaseta.utils.Utils
-import com.gliskstudio.themoviedatabaseta.view.theme.OnSurface
+import com.gliskstudio.themoviedatabaseta.presentation.SharedViewModel
 
 @Composable
 fun CategorySection(
     categoryType: CategoryType,
-    status: LoadingStatus,
     onCategoryClick: (categoryType: CategoryType) -> Unit,
     onItemClick: (id: Int) -> Unit
 ) {
@@ -48,22 +42,38 @@ fun CategorySection(
             onCategoryClick
         )
 
-        // I decided to play with AnimatedVisibilities. It increased the code size, but looks cool
+        val activity = LocalActivity.current as ComponentActivity
+        val sharedViewModel = hiltViewModel<SharedViewModel>(activity)
 
-        AnimatedVisibility(
-            visible = status is LoadingStatus.Loaded && status.list.isNotEmpty(),
+        LaunchedEffect(true) {
+            sharedViewModel.loadByCategory(categoryType)
+        }
+
+        val statusFlow = sharedViewModel.getFlowByCategory(categoryType)
+        val status by statusFlow.collectAsState()
+
+        val isPageLoading: Boolean = if (status is LoadingStatus.InProgress) {
+            (status as LoadingStatus.InProgress).isPageLoading
+        } else {
+            false
+        }
+
+        CategoryList(
+            statusFlow,
+            categoryType,
+            onItemClick
+        )
+
+        /*AnimatedVisibility(
+            visible = list.isNotEmpty() || isPageLoading,
             enter = fadeIn(tween(200, 100)),
             exit = fadeOut(tween(200))
         ) {
-            CategoryList(
-                if (status is LoadingStatus.Loaded) status.list else emptyList(),
-                categoryType,
-                onItemClick
-            )
-        }
+
+        }*/
 
         AnimatedVisibility(
-            visible = status is LoadingStatus.InProgress,
+            visible = status is LoadingStatus.InProgress && !isPageLoading,
             enter = fadeIn(tween(200, 200)),
             exit = fadeOut(tween(200))
         ) {
@@ -80,57 +90,7 @@ fun CategorySection(
             }
         }
 
-        AnimatedVisibility(
-            visible = status is LoadingStatus.EmptyQuery
-                    || (status is LoadingStatus.Loaded && status.list.isEmpty())
-                    || status is LoadingStatus.Error,
-            enter = fadeIn(tween(200, 200)),
-            exit = fadeOut(tween(200))
-        ) {
-            val text: String
-            val imageResource: Int?
-            when (status) {
-                LoadingStatus.EmptyQuery -> {
-                    text = stringResource(R.string.type_to_search)
-                    imageResource = R.drawable.ic_cursor
-                }
-                is LoadingStatus.Error -> {
-                    text = stringResource(R.string.oops_message, status.errorCode)
-                    imageResource = null
-                }
-                else -> {
-                    text = stringResource(R.string.nothing_found)
-                    imageResource = R.drawable.ic_nothing_found
-                }
-            }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp)
-            ) {
-                Text(
-                    text = text,
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center,
-                    color = OnSurface,
-                    modifier = Modifier
-                        .weight(1f)
-                )
-
-                imageResource?. let {
-                    Image(
-                        painter = painterResource(imageResource),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(28.dp)
-                    )
-                }
-            }
-        }
+        CategoryListText(statusFlow)
     }
 }
 
@@ -140,7 +100,6 @@ private fun Preview() {
     Scaffold { padding ->
         CategorySection(
             categoryType = CategoryType.Featured(true),
-            status = LoadingStatus.Loaded(Utils.mockMovieList()),
             onCategoryClick = {},
             onItemClick = {}
         )

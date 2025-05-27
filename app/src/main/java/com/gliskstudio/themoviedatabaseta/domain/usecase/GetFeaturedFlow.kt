@@ -2,12 +2,13 @@ package com.gliskstudio.themoviedatabaseta.domain.usecase
 
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.domain.repository.SearchRepository
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class GetFeaturesListUseCase @Inject constructor(
+class GetFeaturedFlow @Inject constructor(
     private val repository: SearchRepository
 ) {
-    suspend operator fun invoke(): LoadingStatus {
-        return repository.getFeaturedList(false)
+    operator fun invoke() : StateFlow<LoadingStatus> {
+        return repository.featuresListState
     }
 }

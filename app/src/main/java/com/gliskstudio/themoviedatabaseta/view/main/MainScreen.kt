@@ -51,7 +51,6 @@ fun MainScreen (controller: NavHostController) {
         val activity = LocalActivity.current as ComponentActivity
         val sharedViewModel = hiltViewModel<SharedViewModel>(activity)
 
-        val featuresStatus by sharedViewModel.featuresListState.collectAsState()
         val likedStatus by sharedViewModel.likedListState.collectAsState()
         val downloadedStatus by sharedViewModel.downloadedListState.collectAsState()
 
@@ -77,7 +76,6 @@ fun MainScreen (controller: NavHostController) {
 
         CategorySection(
             categoryType = CategoryType.Featured(true),
-            featuresStatus,
             onCategoryClick = onCategoryClick,
             onItemClick = onItemClick
         )
@@ -90,7 +88,6 @@ fun MainScreen (controller: NavHostController) {
         ) {
             CategorySection(
                 categoryType = CategoryType.Liked(true),
-                likedStatus,
                 onCategoryClick = onCategoryClick,
                 onItemClick = onItemClick
             )
@@ -104,7 +101,6 @@ fun MainScreen (controller: NavHostController) {
         ) {
             CategorySection(
                 categoryType = CategoryType.Downloaded(true),
-                downloadedStatus,
                 onCategoryClick = onCategoryClick,
                 onItemClick = onItemClick
             )

@@ -19,6 +19,7 @@ class LocalSearchRepositoryImpl @Inject constructor(
 
     private val key = stringPreferencesKey("ids_key")
 
+    // TODO Reload list only if not a check requested (!isLiked)
     override fun getLikedList(): Flow<List<Int>> {
         return likedDataStore.data.map {
             it[key]?.split(",")?.mapNotNull { it.toIntOrNull() } ?: emptyList()

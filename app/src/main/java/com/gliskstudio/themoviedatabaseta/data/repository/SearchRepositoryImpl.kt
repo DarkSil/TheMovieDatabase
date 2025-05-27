@@ -4,6 +4,8 @@ import com.gliskstudio.themoviedatabaseta.data.remote.api.ApiService
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.domain.repository.SearchRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
@@ -15,9 +17,17 @@ class SearchRepositoryImpl @Inject constructor(
 
     private val localFeaturedList: ArrayList<MovieItem> = arrayListOf()
 
-    override suspend fun getFeaturedList(firstOnly: Boolean): LoadingStatus {
+    private val _featuresListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress())
+    override val featuresListState : StateFlow<LoadingStatus> = _featuresListState
+
+    override suspend fun getFeaturedList(firstOnly: Boolean) {
+        _featuresListState.value = loadFeaturedList(firstOnly)
+    }
+
+    private suspend fun loadFeaturedList(firstOnly: Boolean): LoadingStatus {
+        // TODO Check if it's really required
         if (firstOnly && lastRequestedPage > 0) {
-            return LoadingStatus.Loaded(localFeaturedList)
+            return LoadingStatus.Loaded(localFeaturedList.toList())
         }
 
         if (nextPage > lastRequestedPage) {
@@ -34,8 +44,12 @@ class SearchRepositoryImpl @Inject constructor(
                 }
 
                 nextPage++
-                localFeaturedList.addAll(list)
-                return LoadingStatus.Loaded(localFeaturedList)
+
+                val noDuplicatesList = list.filterNot { item ->
+                    localFeaturedList.any { it.id == item.id }
+                }
+                localFeaturedList.addAll(noDuplicatesList)
+                return LoadingStatus.Loaded(localFeaturedList.toList())
             } else {
                 return when (request.code()) {
                     400 -> LoadingStatus.LimitExceeded
@@ -52,7 +66,15 @@ class SearchRepositoryImpl @Inject constructor(
 
     private val localSearchedList: ArrayList<MovieItem> = arrayListOf()
 
-    override suspend fun getSearchedList(query: String): LoadingStatus {
+    private val _searchedListState = MutableStateFlow<LoadingStatus>(LoadingStatus.InProgress())
+    override val searchedListState : StateFlow<LoadingStatus> = _searchedListState
+
+    override suspend fun getSearchedList(query: String) {
+        _searchedListState.value = loadSearchedList(query)
+    }
+
+    // TODO Develop the way to cancel last request in case new is coming
+    private suspend fun loadSearchedList(query: String): LoadingStatus {
         if (query != lastQuery) {
             nextSearchedPage = 1
             lastSearchedRequestedPage = 0
@@ -73,9 +95,16 @@ class SearchRepositoryImpl @Inject constructor(
                     return LoadingStatus.Error(-1)
                 }
 
+                if (list.isEmpty()) {
+                    return LoadingStatus.LimitExceeded
+                }
+
                 nextSearchedPage++
-                localSearchedList.addAll(list)
-                return LoadingStatus.Loaded(localSearchedList)
+                val noDuplicatesList = list.filterNot { item ->
+                    localSearchedList.any { it.id == item.id }
+                }
+                localSearchedList.addAll(noDuplicatesList)
+                return LoadingStatus.Loaded(localSearchedList.toList())
             } else {
                 return when (request.code()) {
                     400 -> LoadingStatus.LimitExceeded
