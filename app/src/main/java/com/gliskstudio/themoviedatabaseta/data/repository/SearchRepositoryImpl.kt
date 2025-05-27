@@ -21,12 +21,13 @@ class SearchRepositoryImpl @Inject constructor(
     override val featuresListState : StateFlow<LoadingStatus> = _featuresListState
 
     override suspend fun getFeaturedList(firstOnly: Boolean) {
+        _featuresListState.value = LoadingStatus.InProgress(!firstOnly)
         _featuresListState.value = loadFeaturedList(firstOnly)
     }
 
     private suspend fun loadFeaturedList(firstOnly: Boolean): LoadingStatus {
-        if (firstOnly && lastRequestedPage > 0) {
-            return LoadingStatus.Loaded(localFeaturedList.take(3))
+        if (firstOnly && nextPage > 1) {
+            return LoadingStatus.Loaded(localFeaturedList)
         }
 
         if (nextPage > lastRequestedPage) {
@@ -37,9 +38,15 @@ class SearchRepositoryImpl @Inject constructor(
                     it.toItem()
                 }
 
-                if (list.isNullOrEmpty()) {
+                if (list == null) {
                     lastRequestedPage--
                     return LoadingStatus.Error(-1)
+                }
+
+                if (localFeaturedList.isNotEmpty() && list.isEmpty()) {
+                    return LoadingStatus.LimitExceeded
+                } else if (list.isEmpty()) {
+                    return LoadingStatus.Loaded(emptyList())
                 }
 
                 nextPage++
@@ -48,7 +55,7 @@ class SearchRepositoryImpl @Inject constructor(
                     localFeaturedList.any { it.id == item.id }
                 }
                 localFeaturedList.addAll(noDuplicatesList)
-                return LoadingStatus.Loaded(localFeaturedList.toList())
+                return LoadingStatus.Loaded(localFeaturedList)
             } else {
                 return when (request.code()) {
                     400 -> LoadingStatus.LimitExceeded
@@ -69,20 +76,22 @@ class SearchRepositoryImpl @Inject constructor(
     override val searchedListState : StateFlow<LoadingStatus> = _searchedListState
 
     override suspend fun getSearchedList(query: String) {
+        _searchedListState.value = LoadingStatus.InProgress(query == lastQuery)
         _searchedListState.value = loadSearchedList(query)
     }
 
+    // TODO Empty Query
     // TODO Develop the way to cancel last request in case new is coming
     private suspend fun loadSearchedList(query: String): LoadingStatus {
         if (query != lastQuery) {
             nextSearchedPage = 1
             lastSearchedRequestedPage = 0
             localSearchedList.clear()
+            lastQuery = query
         }
 
         if (nextSearchedPage > lastSearchedRequestedPage) {
             val request = apiService.getSearchedList(++lastSearchedRequestedPage, query)
-            lastQuery = query
             if (request.isSuccessful) {
 
                 val list = request.body()?.results?.map {
@@ -94,8 +103,10 @@ class SearchRepositoryImpl @Inject constructor(
                     return LoadingStatus.Error(-1)
                 }
 
-                if (list.isEmpty()) {
+                if (localSearchedList.isNotEmpty() && list.isEmpty()) {
                     return LoadingStatus.LimitExceeded
+                } else if (list.isEmpty()) {
+                    return LoadingStatus.Loaded(emptyList())
                 }
 
                 nextSearchedPage++

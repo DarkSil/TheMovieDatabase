@@ -14,12 +14,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
+import com.gliskstudio.themoviedatabaseta.domain.model.MovieItem
 import com.gliskstudio.themoviedatabaseta.presentation.SharedViewModel
 import com.gliskstudio.themoviedatabaseta.utils.Utils
 import com.gliskstudio.themoviedatabaseta.view.category.section.item.CategoryItem
@@ -30,13 +33,21 @@ import kotlinx.coroutines.flow.StateFlow
 fun CategoryList(
     statusFlow: StateFlow<LoadingStatus>,
     categoryType: CategoryType,
+    modifier: Modifier = Modifier,
     onItemClick: (id: Int) -> Unit
 ) {
+    val lastLoadedList = remember { mutableStateListOf<MovieItem>() }
     val status by statusFlow.collectAsState()
-    val list = if (status is LoadingStatus.Loaded)
-        (status as LoadingStatus.Loaded).list
-    else
-        emptyList()
+
+    // TODO Move this implementation to viewmodel
+    val list = when (status) {
+        is LoadingStatus.Loaded -> {
+            lastLoadedList.clear()
+            lastLoadedList.addAll((status as LoadingStatus.Loaded).list)
+            lastLoadedList
+        }
+        else -> lastLoadedList
+    }
 
     if (categoryType.isLimited) {
         Column(
@@ -44,11 +55,8 @@ fun CategoryList(
                 .fillMaxWidth()
                 .animateContentSize()
         ) {
-            (0..< 3).forEach { index ->
-                val item = list.getOrNull(index)
-                item?.let {
-                    CategoryItem(it, onItemClick)
-                }
+            list.take(3).forEach { item ->
+                CategoryItem(item, onItemClick)
             }
         }
     } else {
@@ -61,13 +69,16 @@ fun CategoryList(
         val state = rememberLazyListState()
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .then(modifier),
             state = state
         ) {
             items(list, key = { it.id }) {
                 CategoryItem(it, onItemClick)
             }
 
+            // TODO Add circular progress as last item
             item {
                 Box(
                     modifier = Modifier

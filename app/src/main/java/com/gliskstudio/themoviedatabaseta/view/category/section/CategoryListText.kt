@@ -64,8 +64,8 @@ fun CategoryListText(
 
     AnimatedVisibility(
         visible = text != null,
-        enter = fadeIn(tween(200, 200)),
-        exit = fadeOut(tween(200))
+        enter = fadeIn(tween(500)),
+        exit = fadeOut(tween(500))
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -78,9 +78,7 @@ fun CategoryListText(
                 text = text ?: "",
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
-                color = OnSurface,
-                modifier = Modifier
-                    .weight(1f)
+                color = OnSurface
             )
 
             imageResource?. let {

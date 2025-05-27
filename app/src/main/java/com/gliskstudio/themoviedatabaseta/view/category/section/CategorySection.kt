@@ -2,7 +2,7 @@ package com.gliskstudio.themoviedatabaseta.view.category.section
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,39 +59,41 @@ fun CategorySection(
             false
         }
 
-        CategoryList(
-            statusFlow,
-            categoryType,
-            onItemClick
+        val isLoadingShown = status is LoadingStatus.InProgress && !isPageLoading
+
+        val alpha by animateFloatAsState(
+            targetValue = if (isLoadingShown) 0f else 1f,
+            animationSpec = tween(500)
         )
 
-        /*AnimatedVisibility(
-            visible = list.isNotEmpty() || isPageLoading,
-            enter = fadeIn(tween(200, 100)),
-            exit = fadeOut(tween(200))
-        ) {
+        Box {
+            CategoryList(
+                statusFlow,
+                categoryType,
+                Modifier.alpha(alpha),
+                onItemClick
+            )
 
-        }*/
-
-        AnimatedVisibility(
-            visible = status is LoadingStatus.InProgress && !isPageLoading,
-            enter = fadeIn(tween(200, 200)),
-            exit = fadeOut(tween(200))
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(0.dp, 24.dp)
+            androidx.compose.animation.AnimatedVisibility (
+                visible = isLoadingShown,
+                enter = fadeIn(tween(500)),
+                exit = fadeOut(tween(500))
             ) {
-                // TODO Custom
-                CircularProgressIndicator(
-                    modifier = Modifier.size(64.dp)
-                )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(0.dp, 24.dp)
+                ) {
+                    // TODO Custom
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(64.dp)
+                    )
+                }
             }
-        }
 
-        CategoryListText(statusFlow)
+            CategoryListText(statusFlow)
+        }
     }
 }
 

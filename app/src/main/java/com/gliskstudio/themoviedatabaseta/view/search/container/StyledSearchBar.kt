@@ -56,7 +56,6 @@ fun StyledSearchBar(
             val activity = LocalActivity.current as ComponentActivity
             val viewModel = hiltViewModel<SharedViewModel>(activity)
 
-            // TODO Query should be used within shared ViewModel
             val query = viewModel.queryTextState
             val queryState = query.collectAsState()
             val queryIsNotEmpty by remember {
