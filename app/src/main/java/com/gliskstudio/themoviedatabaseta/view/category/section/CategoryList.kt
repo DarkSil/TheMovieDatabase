@@ -39,7 +39,6 @@ fun CategoryList(
         emptyList()
 
     if (categoryType.isLimited) {
-        // TODO Animate items
         Column(
             modifier = Modifier
                 .fillMaxWidth()
