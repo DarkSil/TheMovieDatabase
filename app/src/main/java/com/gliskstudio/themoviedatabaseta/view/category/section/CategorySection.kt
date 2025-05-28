@@ -1,5 +1,6 @@
 package com.gliskstudio.themoviedatabaseta.view.category.section
 
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.animateFloatAsState
@@ -21,9 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gliskstudio.themoviedatabaseta.R
 import com.gliskstudio.themoviedatabaseta.domain.model.CategoryType
 import com.gliskstudio.themoviedatabaseta.domain.model.LoadingStatus
 import com.gliskstudio.themoviedatabaseta.presentation.SharedViewModel
@@ -60,9 +64,10 @@ fun CategorySection(
         }
 
         val isLoadingShown = status is LoadingStatus.InProgress && !isPageLoading
+        val isNotificationShown = status is LoadingStatus.EmptyList || status is LoadingStatus.EmptyQuery
 
         val alpha by animateFloatAsState(
-            targetValue = if (isLoadingShown) 0f else 1f,
+            targetValue = if (isLoadingShown || isNotificationShown) 0f else 1f,
             animationSpec = tween(500)
         )
 
@@ -92,7 +97,23 @@ fun CategorySection(
                 }
             }
 
-            CategoryListText(statusFlow)
+            // TODO notify user on empty query
+            CategoryNotificationText(
+                statusFlow,
+                modifier = Modifier.alpha(
+                    if (isNotificationShown) 1f - alpha else 0f
+                )
+            )
+        }
+
+        if (status is LoadingStatus.Error) {
+            val context = LocalContext.current
+            val errorCode = (status as LoadingStatus.Error).errorCode
+            val text = stringResource(R.string.oops_message, errorCode)
+
+            LaunchedEffect(status) {
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

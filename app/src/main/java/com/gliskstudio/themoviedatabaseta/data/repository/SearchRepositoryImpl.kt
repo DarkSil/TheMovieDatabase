@@ -46,7 +46,7 @@ class SearchRepositoryImpl @Inject constructor(
                 if (localFeaturedList.isNotEmpty() && list.isEmpty()) {
                     return LoadingStatus.LimitExceeded
                 } else if (list.isEmpty()) {
-                    return LoadingStatus.Loaded(emptyList())
+                    return LoadingStatus.EmptyList
                 }
 
                 nextPage++
@@ -106,7 +106,7 @@ class SearchRepositoryImpl @Inject constructor(
                 if (localSearchedList.isNotEmpty() && list.isEmpty()) {
                     return LoadingStatus.LimitExceeded
                 } else if (list.isEmpty()) {
-                    return LoadingStatus.Loaded(emptyList())
+                    return LoadingStatus.EmptyList
                 }
 
                 nextSearchedPage++

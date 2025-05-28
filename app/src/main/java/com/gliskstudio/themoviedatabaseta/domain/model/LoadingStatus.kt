@@ -5,6 +5,7 @@ sealed interface LoadingStatus {
     data object EmptyQuery : LoadingStatus
     data object PageOverload : LoadingStatus
     data object LimitExceeded : LoadingStatus
+    data object EmptyList: LoadingStatus
 
     data class InProgress(
         val isPageLoading: Boolean = false
