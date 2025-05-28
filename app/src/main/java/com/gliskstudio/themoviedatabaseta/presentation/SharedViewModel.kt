@@ -79,7 +79,6 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    // TODO Features are not updating with scroll
     fun loadFeatures() {
         viewModelScope.launch(Dispatchers.IO) {
             loadFeaturesListUseCase()

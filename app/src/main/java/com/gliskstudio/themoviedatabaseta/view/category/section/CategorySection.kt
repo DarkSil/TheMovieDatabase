@@ -97,7 +97,6 @@ fun CategorySection(
                 }
             }
 
-            // TODO notify user on empty query
             CategoryNotificationText(
                 statusFlow,
                 modifier = Modifier.alpha(

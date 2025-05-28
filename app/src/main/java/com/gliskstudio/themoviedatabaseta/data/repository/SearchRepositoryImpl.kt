@@ -80,7 +80,6 @@ class SearchRepositoryImpl @Inject constructor(
         _searchedListState.value = loadSearchedList(query)
     }
 
-    // TODO Empty Query
     // TODO Develop the way to cancel last request in case new is coming
     private suspend fun loadSearchedList(query: String): LoadingStatus {
         if (query.isBlank()) {
