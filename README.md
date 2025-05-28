@@ -32,5 +32,5 @@ Tech stack:
 Additionally I want to highlight resources usage - resources are in an SVG format to reduce app size
 and to have a flexibility with usage (colors, shapes etc)
 
-TODO - Fix search, fix UI blicks, to do entire media part, to do downloads
+TODO - entire media part + downloads + internal todos
 </pre>
