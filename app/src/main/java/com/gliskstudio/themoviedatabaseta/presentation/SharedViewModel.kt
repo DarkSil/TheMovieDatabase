@@ -112,7 +112,9 @@ class SharedViewModel @Inject constructor(
                             }
                         }
                     }
-                    _likedListState.value = LoadingStatus.Loaded(results.mapNotNull { it.await() })
+                    // Reversed to show the most lastly added at the top
+                    _likedListState.value = LoadingStatus
+                        .Loaded(results.reversed().mapNotNull { it.await() })
                 }
             }
         }
@@ -135,7 +137,7 @@ class SharedViewModel @Inject constructor(
                         }
                     }
                     _downloadedListState.value =
-                        LoadingStatus.Loaded(results.mapNotNull { it.await() })
+                        LoadingStatus.Loaded(results.reversed().mapNotNull { it.await() })
                 }
             }
         }
