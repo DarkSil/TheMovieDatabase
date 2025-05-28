@@ -63,7 +63,7 @@ class SharedViewModel @Inject constructor(
 
     val queryTextState = MutableStateFlow("")
 
-    // TODO Move caching to new repository and add to cached items both "searched" and "featured" lists
+    // TODO Move caching to new repository and add to cached items both "searched" and "featured" lists (Or better only the ones being liked or downloaded)
     private val cachedItems = mutableMapOf<Int, MovieItem>()
 
     init {

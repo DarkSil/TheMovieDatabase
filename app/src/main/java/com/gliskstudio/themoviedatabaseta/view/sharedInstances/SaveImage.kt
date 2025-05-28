@@ -48,6 +48,7 @@ fun SaveImage(
     }
 
     val isSaved by sharedViewModel.isLiked(id).collectAsState(null)
+    val fillColor = if (contrastRequired) White else Black
 
     Image(
         painter = painterResource(
@@ -57,7 +58,7 @@ fun SaveImage(
                 R.drawable.ic_save_disabled
         ),
         contentDescription = stringResource(R.string.save),
-        colorFilter = ColorFilter.tint(Black, BlendMode.SrcIn),
+        colorFilter = ColorFilter.tint(fillColor, BlendMode.SrcIn),
         modifier = Modifier
             .clickable {
                 sharedViewModel.triggerLiked(id)
