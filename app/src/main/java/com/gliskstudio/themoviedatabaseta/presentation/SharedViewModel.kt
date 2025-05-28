@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -69,7 +68,6 @@ class SharedViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             queryTextState.debounce(500)
-                .filter { it.isNotBlank() }
                 .distinctUntilChanged()
                 .collectLatest {
                     withContext(Dispatchers.IO) {
