@@ -57,6 +57,7 @@ class SearchRepositoryImpl @Inject constructor(
                 localFeaturedList.addAll(noDuplicatesList)
                 return LoadingStatus.Loaded(localFeaturedList)
             } else {
+                // TODO Global error handler
                 return when (request.code()) {
                     400 -> LoadingStatus.LimitExceeded
                     else -> LoadingStatus.Error(request.code())
