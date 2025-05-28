@@ -148,7 +148,7 @@ class SharedViewModel @Inject constructor(
                 loadFeaturesFirstPage()
             }
             is CategoryType.Searched -> {
-                loadSearched()
+                return
             }
             is CategoryType.Downloaded -> {
                 loadDownloaded()
@@ -178,10 +178,8 @@ class SharedViewModel @Inject constructor(
 
     fun loadSearched() {
         val query = queryTextState.value
-        if (query.isNotBlank()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                loadSearchedListUseCase(query)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            loadSearchedListUseCase(query)
         }
     }
 

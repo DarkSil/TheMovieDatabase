@@ -83,6 +83,10 @@ class SearchRepositoryImpl @Inject constructor(
     // TODO Empty Query
     // TODO Develop the way to cancel last request in case new is coming
     private suspend fun loadSearchedList(query: String): LoadingStatus {
+        if (query.isBlank()) {
+            return LoadingStatus.EmptyQuery
+        }
+
         if (query != lastQuery) {
             nextSearchedPage = 1
             lastSearchedRequestedPage = 0
