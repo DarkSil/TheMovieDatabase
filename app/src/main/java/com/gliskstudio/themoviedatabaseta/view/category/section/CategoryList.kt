@@ -101,7 +101,10 @@ fun CategoryList(
                     val isPageLoading = status is LoadingStatus.InProgress
                             && (status as LoadingStatus.InProgress).isPageLoading
 
-                    if (isPageLoading || status is LoadingStatus.Loaded) {
+                    val isAppropriateCategory = categoryType is CategoryType.Featured
+                            || categoryType is CategoryType.Searched
+
+                    if ((isPageLoading || status is LoadingStatus.Loaded) && isAppropriateCategory) {
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(48.dp)
