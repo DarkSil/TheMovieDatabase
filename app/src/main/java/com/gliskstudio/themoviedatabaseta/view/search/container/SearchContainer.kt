@@ -57,8 +57,6 @@ fun SearchContainer(
             isSearchBarVisible = false
             isPaddingRequired = true
         }
-
-        // TODO Fix item is instantly closing while search cursor visible
     }
 
     val paddingTop = paddingValues.calculateTopPadding() + 10.dp
